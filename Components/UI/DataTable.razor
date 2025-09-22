@@ -1,0 +1,128 @@
+﻿<div class="listagem">
+    <table>
+        <thead>
+            <tr>
+                @foreach (var col in Columns)
+                {
+                    <th>@col.Label</th>
+                }
+                @if (Actions?.Any() == true)
+                {
+                    <th>Ações</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in Rows)
+            {
+                <tr>
+                    @foreach (var col in Columns)
+                    {
+                        <td>@(row.ContainsKey(col.Key) ? row[col.Key] : null)</td>
+                    }
+
+                    @if (Actions?.Any() == true)
+                    {
+                        <td class="secao-botoes">
+                            @foreach (var action in Actions)
+                            {
+                                <button class="action-button" @onclick="() => HandleAction(action, row)">
+                                    @action.Icon
+                                </button>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    public class Column
+    {
+        public string Key { get; set; } = "";
+        public string Label { get; set; } = "";
+    }
+
+    public class Action
+    {
+        public string Name { get; set; } = "";
+        public RenderFragment? Icon { get; set; }
+        public EventCallback<Dictionary<string, object?>> Handler { get; set; }
+    }
+
+    [Parameter] public IEnumerable<Column> Columns { get; set; } = new List<Column>();
+    [Parameter] public IEnumerable<Dictionary<string, object?>> Rows { get; set; } = new List<Dictionary<string, object?>>();
+    [Parameter] public IEnumerable<Action>? Actions { get; set; }
+
+    [Parameter] public EventCallback<(string actionName, Dictionary<string, object?> row)> OnAction { get; set; }
+
+    private async Task HandleAction(Action action, Dictionary<string, object?> row)
+    {
+        if (action.Handler.HasDelegate)
+        {
+            await action.Handler.InvokeAsync(row);
+        }
+        if (OnAction.HasDelegate)
+        {
+            await OnAction.InvokeAsync((action.Name, row));
+        }
+    }
+}
+
+<style>
+    .listagem {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        min-width: 800px;
+    }
+
+    thead {
+        background-color: rgba(128, 128, 128, 0.17);
+    }
+
+    th {
+        padding: 0.75rem 1rem;
+        font-weight: 600;
+        color: #e39b34;
+    }
+
+    td {
+        padding: 0.5rem 0.75rem;
+        vertical-align: middle;
+        border-bottom: 1px solid rgba(128, 128, 128, 0.17);
+    }
+
+    tbody tr:hover {
+        background-color: #fdf6e3;
+    }
+
+    .secao-botoes {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        padding: 1.5rem 0.5rem;
+    }
+
+    .action-button {
+        background-color: transparent;
+        padding: 0.25rem;
+        border-radius: 0.25rem;
+        transition: background 0.2s, color 0.2s;
+    }
+
+        .action-button:hover {
+            background-color: #f7f7f7;
+        }
+</style>

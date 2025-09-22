@@ -1,0 +1,37 @@
+﻿@page "/relatorios"
+
+<PageTitle>Relatório de Agendamento de Quadras</PageTitle>
+
+<style>
+	.main-title {
+		margin-bottom: 1.5rem;
+		font-weight: 600;
+	}
+
+		.main-title::before {
+			content: "";
+			width: 8px;
+			height: 100%;
+			border: 2px solid #e39b34;
+			margin-right: 0.5rem;
+		}
+</style>
+
+<h1 class="main-title text-2xl font-semibold mt-3">Relatório de Agendamento de Quadras</h1>
+
+<div class="flex gap-7">
+	<AppExemplo.Components.VV.TextField Label="Pesquisar" Placeholder="Digite algo..." @bind-Value="search" />
+
+	<AppExemplo.Components.UI.Button OutlineOnClick="true" OnClick="HandleClick">
+		Adicionar
+	</AppExemplo.Components.UI.Button>
+
+</div>
+@code{
+	private void HandleClick(MouseEventArgs e)
+	{
+		Console.WriteLine("Botão clicado!");
+	}
+
+	private string search = "";
+}

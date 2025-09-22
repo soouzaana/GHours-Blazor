@@ -1,0 +1,69 @@
+﻿<button class="ui-button @(OutlineOnClick ? "button-outline" : "")" @onclick="OnClick" disabled="@Disabled">
+    @if (StartIcon is not null)
+    {
+        <span class="icon-slot">
+            @StartIcon
+        </span>
+    }
+
+    <p class="button-text">
+        @ChildContent
+    </p>
+
+    @if (EndIcon is not null)
+    {
+        <span class="icon-slot">
+            @EndIcon
+        </span>
+    }
+</button>
+
+@code {
+    [Parameter] public bool OutlineOnClick { get; set; } = true;
+    [Parameter] public bool Disabled { get; set; } = false;
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment? StartIcon { get; set; }
+    [Parameter] public RenderFragment? EndIcon { get; set; }
+
+    [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
+}
+
+<style>
+    .ui-button {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.875rem 1.25rem;
+        border-radius: 0.5625rem;
+        background-color: #e39b34;
+        color: #f7f7f7;
+        font-weight: 600;
+        text-align: center;
+        cursor: pointer;
+        transition: box-shadow 0.2s ease;
+    }
+
+        .ui-button:disabled {
+            background-color: #e39b34;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+    .button-outline:focus,
+    .button-outline:focus-within {
+        box-shadow: 0 0 0.5px 5px rgba(227, 155, 52, 0.3);
+        outline: none;
+    }
+
+    .icon-slot {
+        width: 1.25rem; 
+        display: flex;
+        justify-content: center;
+    }
+
+    .button-text {
+        flex: 1;
+    }
+
+</style>
