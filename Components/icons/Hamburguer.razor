@@ -10,4 +10,10 @@
         d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"
       />
     </svg>
-  </div>
+</div>
+
+@code {
+    [Parameter] public string Width { get; set; } = "19";
+    [Parameter] public string Height { get; set; } = "24";
+    [Parameter] public string Color { get; set; } = "currentColor";
+}
