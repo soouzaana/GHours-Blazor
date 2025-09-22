@@ -4,9 +4,9 @@
 </NavLink> *@
 
 <!-- Sidebar -->
-<div id="sidebar" class="bg-orange w-64 p-4 flex flex-col shadow-lg transition-all duration-300">
+<div id="sidebar" class="bg-[#E39B34] w-64 p-4 flex flex-col shadow-lg transition-all duration-300">
     <button id="toggleSidebar"
-            class="mb-6 flex items-center gap-2 text-white0 hover:text-indigo-600">
+            class="mb-6 flex items-center gap-2 text-white hover:text-indigo-600">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
              viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
@@ -16,20 +16,14 @@
 
     <nav class="flex flex-col gap-4 flex-1">
         <a href="/"
-           class="flex items-center gap-3 p-2 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900 text-gray-700 dark:text-gray-200">
-            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M3 12l2-2m0 0l7-7 7 7m-9 2v8m4 0v-8m5-2l2 2m-2-2v10a1 1 0 01-1 1H6a1 1 0 01-1-1V10z" />
-            </svg>
-            <span class="sidebar-text">Dashboard</span>
+           class="flex items-center gap-3 p-2 rounded-lg hover:bg-indigo-100[0 text-gray-700">
+            <AppExemplo.Components.icons.Home Color="white" Width="19" Height="24"/>
+            <span class="sidebar-text">Home</span>
         </a>
 
         <NavLink class="flex items-center gap-3 p-2 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900 text-gray-700 dark:text-gray-200" href="/clientes" Match="NavLinkMatch.All">
-            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M3 12l2-2m0 0l7-7 7 7m-9 2v8m4 0v-8m5-2l2 2m-2-2v10a1 1 0 01-1 1H6a1 1 0 01-1-1V10z" />
-            </svg>
-            <span class="sidebar-text">Clientes</span>
+            <AppExemplo.Components.icons.Report Color="white"/>
+            <span class="sidebar-text">Relatórios</span>
         </NavLink>
 
 

@@ -1,37 +1,28 @@
 ﻿@inherits LayoutComponentBase
 
+
 <NavMenu />
 
 <!-- Main content -->
 <div class="flex flex-col flex-1">
     <!-- Navbar -->
-    <header class="bg-[#f7f7f7] shadow-md h-16 flex items-center justify-between px-6 transition-colors duration-500">
-        <!-- Logo -->
-        <div class="flex items-center gap-2">
-            <img src="/images/logo.svg" alt="Logo" class="h-10 w-10">
-        </div>
-
+    <header class="bg-white shadow-md h-16 flex items-center justify-between px-6 transition-colors duration-500">     
+        <p class="text-xl font-bold">Nome da página acessada</p>
         <!-- User menu + tema -->
-        <div class="flex items-center gap-4 relative">
+        <div class="flex justify-content-between items-center gap-4 relative">
             <button id="bell" class="text-gray-600 hover:text-indigo-600 transition">
-				<AppExemplo.wwwroot.icons.Bell class="h-6 w-6" />
+				<AppExemplo.Components.icons.Bell Color="orange" Width="15" Height="20"/>
             </button>
             <div class="relative">
-                <button id="userMenuBtn" class="flex items-center gap-2">
-                    <span class="text-gray-600 dark:text-gray-300">Olá, João</span>
-                    <img src="https://i.pravatar.cc/40" alt="Usuário" class="rounded-full h-10 w-10 border">
-                </button>
-                <!-- Dropdown -->
-                <div id="userDropdown"
-                     class="hidden absolute right-0 mt-2 w-40 bg-white dark:bg-gray-700 shadow-lg rounded-lg overflow-hidden">
-                    <a href="#"
-                       class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">Configurações</a>
-                    <a href="#"
-                       class="block px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-600">Sair</a>
+                <!-- Logo -->
+                <div class="flex items-center gap-2">
+                    <img src="/images/logo.svg" alt="Logo" class="h-10 w-10">
                 </div>
             </div>
         </div>
     </header>
+
+
 
     <!-- Conteúdo principal -->
     <main class="p-6 flex-1">
