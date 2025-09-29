@@ -1,94 +1,66 @@
-CREATE TABLE
-  fornecedor (
-    id_for INT NOT NULL AUTO_INCREMENT,
-    nome_for VARCHAR(255) NOT NULL,
-    PRIMARY KEY (id_for)
-  );
+CREATE TABLE cliente
+(
+	id_cli INT NOT NULL AUTO_INCREMENT,
+	nome_cli VARCHAR(200) NOT NULL,
+	cpf_cli VARCHAR(11) NOT NULL,
+	telefone_cli VARCHAR(20),
+	email_cli VARCHAR(50),
+  PRIMARY KEY (id_cli)
+);
 
-CREATE TABLE
-  produto (
-    id_pro INT NOT NULL AUTO_INCREMENT,
-    id_for_fk INT NULL,
-    nome_pro VARCHAR(255) NOT NULL,
-    descricao_pro TEXT NULL,
-    quantidade_pro INT NOT NULL,
-    preco_pro DECIMAL(10, 2) NOT NULL,
-    PRIMARY KEY (id_pro),
-    FOREIGN KEY (id_for_fk) REFERENCES fornecedor (id_for)
-  );
+CREATE TABLE funcionario
+(
+	id_fun INT NOT NULL AUTO_INCREMENT,
+	nome_fun VARCHAR(200) NOT NULL,
+	email_fun VARCHAR(50),
+	endereco_fun VARCHAR (300),
+	cpf_fun VARCHAR(11),
+	telefone_fun VARCHAR(20),
+  PRIMARY KEY (id_fun)
+);
 
--- Inserindo fornecedores
+CREATE TABLE quadra (
+    id_qua INT AUTO_INCREMENT PRIMARY KEY,
+    descricao_qua VARCHAR(300),
+    valor_qua DECIMAL (10, 2),
+    status_qua VARCHAR(50),
+    PRIMARY KEY (id_qua)
+);
+
+CREATE TABLE agendamento (
+	id_agen INT AUTO_INCREMENT PRIMARY KEY,
+    data_agen DATE,
+    horaInicial_agen TIME,
+    horaFinal_agen TIME, 
+    status_agen VARCHAR(50),
+    valor_total DECIMAL (10, 2),
+    data_reserva_agen date,
+    PRIMARY KEY (id_agen)
+    id_qua_fk int not null,
+	  foreign key (id_qua_fk) references quadra (id_qua)
+);
+
+-- Inserindo dados iniciais nas tabelas
 INSERT INTO
-  fornecedor (nome_for)
+  cliente (nome_cli, cpf_cli, telefone_cli, email_cli)
 VALUES
-  ('Fornecedor Alpha'),
-  ('Fornecedor Beta'),
-  ('Fornecedor Gamma'),
-  ('Fornecedor Delta');
+  ('João Silva', '123.456.789-01', '(69)99999-9999', 'joao@gmai.com'),
+  ('Maria Oliveira', '987.654.321-00', '(69)98888-8888', 'maria@gmail.com'),
+  ('Carlos Souza', '456.789.123-45', '(69)97777-7777', 'carluxo@hotmail.com');
 
--- Inserindo produtos vinculados aos fornecedores
-INSERT INTO
-  produto (
-    id_for_fk,
-    nome_pro,
-    descricao_pro,
-    quantidade_pro,
-    preco_pro
-  )
+INSERT INTO funcionario (nome_fun, email_fun, endereco_fun, cpf_fun, telefone_fun)
 VALUES
-  (
-    1,
-    'Notebook X',
-    'Notebook de alto desempenho com 16GB RAM e SSD 512GB',
-    10,
-    4500.00
-  ),
-  (
-    1,
-    'Mouse Óptico',
-    'Mouse com fio, 1200 DPI',
-    50,
-    45.90
-  ),
-  (
-    2,
-    'Smartphone Y',
-    'Smartphone 6.5 polegadas, 128GB',
-    20,
-    2100.00
-  ),
-  (
-    2,
-    'Carregador Rápido',
-    'Carregador USB-C 25W',
-    100,
-    89.90
-  ),
-  (
-    3,
-    'Cadeira Gamer',
-    'Cadeira ergonômica ajustável',
-    15,
-    1250.00
-  ),
-  (
-    3,
-    'Mesa de Escritório',
-    'Mesa em L com suporte para monitor',
-    8,
-    980.00
-  ),
-  (
-    4,
-    'Monitor 27"',
-    'Monitor LED Full HD 27 polegadas',
-    12,
-    1150.00
-  ),
-  (
-    4,
-    'Teclado Mecânico',
-    'Teclado RGB switch blue',
-    30,
-    350.00
-  );
+  ('Ana Pereira', 'ana@hotmail.com', 'Rua Farto, 123, Cidade Ji-Paraná', '321.654.987-00', '(69)96666-6666'),
+  ('Bruno Lima', 'brunno.lima@gmail.com', 'Av. Central, 456, Cidade Ji-Paraná', '654.321.987-11', '(69)95555-5555'),
+
+INSERT INTO quadra (descricao_qua, valor_qua, status_qua)
+VALUES
+  ('Quadra de Futebol', 150.00, 'Disponível'),
+  ('Quadra de Vôlei - A', 120.00, 'Disponível'),
+  ('Quadra de Vôlei - B', 120.00, 'Indisponível');
+
+INSERT INTO agendamento (data_agen, horaInicial_agen, horaFinal_agen, status_agen, valor_total, data_reserva_agen, id_qua_fk)
+VALUES
+  ('2025-07-10', '14:00:00', '15:00:00', 'Confirmado', 150.00, '2025-06-20', 1),
+  ('2025-07-11', '16:00:00', '17:30:00', 'Pendente', 180.00, '2025-06-21', 2),
+  ('2025-07-12', '10:00:00', '11:00:00', 'Cancelado', 130.00, '2025-06-22', 3);
