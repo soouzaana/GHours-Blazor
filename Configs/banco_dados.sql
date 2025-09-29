@@ -16,6 +16,7 @@ CREATE TABLE funcionario
 	endereco_fun VARCHAR (300),
 	cpf_fun VARCHAR(11),
 	telefone_fun VARCHAR(20),
+  funcao_fun VARCHAR(50),
   PRIMARY KEY (id_fun)
 );
 
@@ -48,10 +49,10 @@ VALUES
   ('Maria Oliveira', '987.654.321-00', '(69)98888-8888', 'maria@gmail.com'),
   ('Carlos Souza', '456.789.123-45', '(69)97777-7777', 'carluxo@hotmail.com');
 
-INSERT INTO funcionario (nome_fun, email_fun, endereco_fun, cpf_fun, telefone_fun)
+INSERT INTO funcionario (nome_fun, email_fun, endereco_fun, cpf_fun, telefone_fun, fruncao_fun)
 VALUES
-  ('Ana Pereira', 'ana@hotmail.com', 'Rua Farto, 123, Cidade Ji-Paraná', '321.654.987-00', '(69)96666-6666'),
-  ('Bruno Lima', 'brunno.lima@gmail.com', 'Av. Central, 456, Cidade Ji-Paraná', '654.321.987-11', '(69)95555-5555'),
+  ('Ana Pereira', 'ana@hotmail.com', 'Rua Farto, 123, Cidade Ji-Paraná', '321.654.987-00', '(69)96666-6666', 'Recepcionista'),
+  ('Bruno Lima', 'brunno.lima@gmail.com', 'Av. Central, 456, Cidade Ji-Paraná', '654.321.987-11', '(69)95555-5555', 'Gerente');
 
 INSERT INTO quadra (descricao_qua, valor_qua, status_qua)
 VALUES
