@@ -9,7 +9,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddSingleton<Conexao>();
-builder.Services.AddSingleton<ProdutoDAO>();
+//builder.Services.AddSingleton<ProdutoDAO>();
 
 var app = builder.Build();
 
