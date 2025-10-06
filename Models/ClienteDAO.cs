@@ -5,7 +5,7 @@ namespace AppExemplo.Models
     public class ClienteDAO
     {
         private readonly Conexao _conexao;
-        public ClienteDAO(Conexao conexao)
+        public ClienteDAO(Conexao conexao) 
         {
             _conexao = conexao;
         }
