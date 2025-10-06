@@ -66,3 +66,8 @@ VALUES
   ('2025-07-10', '14:00:00', '15:00:00', 'Confirmado', 150.00, '2025-06-20', 1),
   ('2025-07-11', '16:00:00', '17:30:00', 'Pendente', 180.00, '2025-06-21', 2),
   ('2025-07-12', '10:00:00', '11:00:00', 'Cancelado', 130.00, '2025-06-22', 3);
+
+SELECT * FROM cliente;
+SELECT * FROM funcionario;
+SELECT * FROM quadra;
+SELECT * FROM agendamento;

@@ -9,7 +9,10 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddSingleton<Conexao>();
-builder.Services.AddSingleton<ProdutoDAO>();
+builder.Services.AddSingleton<AgendamentoDAO>();
+builder.Services.AddSingleton<ClienteDAO>();
+builder.Services.AddSingleton<FuncionarioDAO>();
+builder.Services.AddSingleton<QuadraDAO>();
 
 var app = builder.Build();
 
