@@ -9,15 +9,16 @@ namespace AppExemplo.Models
         {
             _conexao = conexao;
         }
-
-        public List<Agendamento> ListarTodos() { 
         
+        public List<Agendamento> ListarTodos()
+        {
+
             var lista = new List<Agendamento>();
 
             var comando = _conexao.CreateCommand("SELECT * FROM agendamento");
             var leitor = comando.ExecuteReader();
 
-            while(leitor.Read())
+            while (leitor.Read())
             {
                 var agendamento = new Agendamento
                 {
