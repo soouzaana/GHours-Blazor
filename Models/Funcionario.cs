@@ -4,10 +4,10 @@ namespace AppExemplo.Models
     {
         public int Id { get; set; }
         public required string Nome { get; set; }
-        public string Cpf { get; set; }
-        public string Telefone { get; set; }
-        public string Email { get; set; }
-        public string Endereco { get; set; }
-        public string Funcao { get; set; }
+        public required string Cpf { get; set; }
+        public required string Telefone { get; set; }
+        public string? Email { get; set; }
+        public string? Endereco { get; set; }
+        public required string Funcao { get; set; }
     }
 }

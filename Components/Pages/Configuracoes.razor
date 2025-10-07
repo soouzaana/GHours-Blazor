@@ -1,4 +1,4 @@
-﻿@page "/configuracoes"
+﻿@page "/configuracoes-page"
 
 @using Microsoft.AspNetCore.Components.Forms
 
@@ -50,10 +50,13 @@
         Console.WriteLine($"Password: {Password}");
         Console.WriteLine($"Notifications: Email={NotificationsEmail}, Push={NotificationsPush}");
         // Para exibir alerta no navegador
-        JS.InvokeVoidAsync("alert", "Configurações salvas!");
+        if (JS is not null)
+        {
+            JS.InvokeVoidAsync("alert", "Configurações salvas!");
+        }
     }
 
-    [Inject] private IJSRuntime JS { get; set; }
+    [Inject] private IJSRuntime? JS { get; set; }
 }
 
     <style>
