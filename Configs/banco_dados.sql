@@ -2,7 +2,7 @@ CREATE TABLE cliente
 (
 	id_cli INT NOT NULL AUTO_INCREMENT,
 	nome_cli VARCHAR(200) NOT NULL,
-	cpf_cli VARCHAR(11) NOT NULL,
+	cpf_cli VARCHAR(14) NOT NULL,
 	telefone_cli VARCHAR(20),
 	email_cli VARCHAR(50),
   PRIMARY KEY (id_cli)
@@ -14,14 +14,14 @@ CREATE TABLE funcionario
 	nome_fun VARCHAR(200) NOT NULL,
 	email_fun VARCHAR(50),
 	endereco_fun VARCHAR (300),
-	cpf_fun VARCHAR(11),
+	cpf_fun VARCHAR(14),
 	telefone_fun VARCHAR(20),
   funcao_fun VARCHAR(50),
   PRIMARY KEY (id_fun)
 );
 
 CREATE TABLE quadra (
-    id_qua INT AUTO_INCREMENT PRIMARY KEY,
+    id_qua INT AUTO_INCREMENT,
     nome_qua VARCHAR(50),
     descricao_qua VARCHAR(300),
     valor_qua DECIMAL (10, 2),
@@ -30,7 +30,7 @@ CREATE TABLE quadra (
 );
 
 CREATE TABLE agendamento (
-	id_agen INT AUTO_INCREMENT PRIMARY KEY,
+	id_agen INT AUTO_INCREMENT,
     data_agen DATE,
     horaInicial_agen TIME,
     horaFinal_agen TIME, 
@@ -39,8 +39,9 @@ CREATE TABLE agendamento (
     data_reserva_agen date,
     PRIMARY KEY (id_agen)
     id_qua_fk int not null,
-	  foreign key (id_qua_fk) references quadra (id_qua)
+	  FOREIGN KEY (id_qua_fk) REFERENCES quadra(id_qua)
 );
+
 
 -- Inserindo dados iniciais nas tabelas
 
@@ -53,7 +54,7 @@ VALUES
   ('Carlos Souza', '456.789.123-45', '(69)97777-7777', 'carluxo@hotmail.com');
 
 -- inserindo dados na tabela funcionario
-INSERT INTO funcionario (nome_fun, email_fun, endereco_fun, cpf_fun, telefone_fun, fruncao_fun)
+INSERT INTO funcionario (nome_fun, email_fun, endereco_fun, cpf_fun, telefone_fun, funcao_fun)
 VALUES
   ('Ana Pereira', 'ana@hotmail.com', 'Rua Farto, 123, Cidade Ji-Paraná', '321.654.987-00', '(69)96666-6666', 'Recepcionista'),
   ('Bruno Lima', 'brunno.lima@gmail.com', 'Av. Central, 456, Cidade Ji-Paraná', '654.321.987-11', '(69)95555-5555', 'Gerente');
@@ -73,6 +74,7 @@ VALUES
   ('2025-07-12', '10:00:00', '11:00:00', 'Cancelado', 130.00, '2025-06-22', 3);
 
 -- Consultando os dados inseridos
+
 SELECT * FROM cliente;
 SELECT * FROM funcionario;
 SELECT * FROM quadra;
