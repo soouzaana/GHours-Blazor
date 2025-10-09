@@ -1,0 +1,66 @@
+﻿@page "/agendamentos"
+@using AppExemplo.Models;
+@using System.ComponentModel
+@inject AgendamentoDAO AgendamentoDAO;
+
+<PageTitle>Agendamentos</PageTitle>
+
+<style>
+    .main-title {
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+    }
+
+        .main-title::before {
+            content: "";
+            width: 8px;
+            height: 100%;
+            border: 2px solid #e39b34;
+            margin-right: 0.5rem;
+        }
+</style>
+
+<h1 class="main-title text-2xl font-semibold mt-3">Agendamentos</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>HoraInicial</th>
+            <th>HoraFinal</th>
+            <th>Status</th>
+            <th>ValorTotal</th>
+            <th>DataReserva</th>
+            <th>QuadraId</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var agendamento in listaAgendamentos)
+        {
+            <tr>
+                <td>@agendamento.Data</td>
+                <td>@agendamento.HoraInicial</td>
+                <td>@agendamento.HoraFinal</td>
+                <td>@agendamento.Status</td>
+                <td>@agendamento.DataReserva</td>
+                <td>@agendamento.ValorTotal</td>
+                <td>@agendamento.QuadraId</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<Agendamento> listaAgendamentos = new();
+
+    protected override void OnInitialized()
+    {
+        CarregarAgendamento();
+    }
+
+    private void CarregarAgendamento()
+    {
+        listaAgendamentos = AgendamentoDAO.ListarTodos();
+    }
+}

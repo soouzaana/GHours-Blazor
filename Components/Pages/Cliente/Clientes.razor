@@ -1,0 +1,61 @@
+﻿@page "/clientes"
+@using AppExemplo.Models;
+@inject ClienteDAO ClienteDAO;
+
+<PageTitle>Clientes Cadastrados</PageTitle>
+
+<style>
+	.main-title {
+		margin-bottom: 1.5rem;
+		font-weight: 600;
+	}
+
+		.main-title::before {
+			content: "";
+			width: 8px;
+			height: 100%;
+			border: 2px solid #e39b34;
+			margin-right: 0.5rem;
+		}
+</style>
+
+<h1 class="main-title text-2xl font-semibold mt-3">Clientes Cadastrados</h1>
+
+@* ahef para o botao de + *@
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Telefone</th>
+            <th>E-mail</th>
+            <th>CPF</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var cliente in listaClientes)
+        {
+            <tr>
+                <td>@cliente.Nome</td>
+                <td>@cliente.Telefone</td>
+                <td>@cliente.Email</td>
+                <td>@cliente.Cpf</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<Cliente> listaClientes = new();
+
+    protected override void OnInitialized()
+    {
+        CarregarClientes();
+    }
+
+    private void CarregarClientes()
+    {
+        listaClientes = ClienteDAO.ListarTodos();
+    }
+}

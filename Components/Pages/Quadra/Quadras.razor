@@ -1,0 +1,59 @@
+﻿@page "/quadras"
+@using AppExemplo.Models;
+@inject QuadraDAO QuadraDAO;
+
+<PageTitle>Quadras</PageTitle>
+
+<style>
+    .main-title {
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+    }
+
+        .main-title::before {
+            content: "";
+            width: 8px;
+            height: 100%;
+            border: 2px solid #e39b34;
+            margin-right: 0.5rem;
+        }
+</style>
+
+<h1 class="main-title text-2xl font-semibold mt-3">Quadras</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Descrição</th>
+            <th>Valor</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var quadra in listaQuadras)
+        {
+            <tr>
+                <td>@quadra.Nome</td>
+                <td>@quadra.Descricao</td>
+                <td>@quadra.Valor</td>
+                <td>@quadra.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<Quadra> listaQuadras = new();
+
+    protected override void OnInitialized()
+    {
+        CarregarQuadras();
+    }
+
+    private void CarregarQuadras()
+    {
+        listaQuadras = QuadraDAO.ListarTodos();
+    }
+}

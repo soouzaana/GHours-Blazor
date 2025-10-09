@@ -1,0 +1,64 @@
+﻿@page "/funcionarios"
+@using AppExemplo.Models;
+@inject FuncionarioDAO FuncionarioDAO;
+
+<PageTitle>Funcionarios</PageTitle>
+
+<style>
+    .main-title {
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+    }
+
+        .main-title::before {
+            content: "";
+            width: 8px;
+            height: 100%;
+            border: 2px solid #e39b34;
+            margin-right: 0.5rem;
+        }
+</style>
+
+<h1 class="main-title text-2xl font-semibold mt-3">Funcionários Cadastrados</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>CPF</th>
+            <th>Telefone</th>
+            <th>E-mail</th>
+            <th>Endereço</th>
+            <th>Função</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var funcionario in listaFuncionario)
+        {
+            <tr>
+                <td>@funcionario.Nome</td>
+                <td>@funcionario.Cpf</td>
+                <td>@funcionario.Telefone</td>
+                <td>@funcionario.Email</td>
+                <td>@funcionario.Endereco</td>
+                <td>@funcionario.Funcao</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<Funcionario> listaFuncionario = new();
+
+    protected override void OnInitialized()
+    {
+        CarregarFuncionario();
+    }
+
+    private void CarregarFuncionario()
+    {
+        listaFuncionario = FuncionarioDAO.ListarTodos();
+    }
+}
