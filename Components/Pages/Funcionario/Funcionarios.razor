@@ -1,4 +1,6 @@
 ﻿@page "/funcionarios"
+@using AppExemplo.Models;
+@inject FuncionarioDAO FuncionarioDAO;
 
 <PageTitle>Funcionarios</PageTitle>
 
@@ -19,86 +21,44 @@
 
 <h1 class="main-title text-2xl font-semibold mt-3">Funcionários Cadastrados</h1>
 
-<div>
-    <div class="flex gap-10 justify-content-between align-items-center mb-5">
-        <AppExemplo.Components.VV.TextField Label="Pesquisar" Placeholder="Digite algo..." @bind-Value="search" />
 
-        <AppExemplo.Components.UI.Button OutlineOnClick="true" OnClick="HandleClick">
-            <AppExemplo.Components.icons.Add />
-        </AppExemplo.Components.UI.Button>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>CPF</th>
+            <th>Telefone</th>
+            <th>E-mail</th>
+            <th>Endereço</th>
+            <th>Função</th>
+        </tr>
+    </thead>
 
-    </div>
-    <AppExemplo.Components.UI.DataTable Columns="columns" Rows="rows" Actions="actions" OnAction="HandleAction" />
-</div>
+    <tbody>
+        @foreach (var funcionario in listaFuncionario)
+        {
+            <tr>
+                <td>@funcionario.Nome</td>
+                <td>@funcionario.Cpf</td>
+                <td>@funcionario.Telefone</td>
+                <td>@funcionario.Email</td>
+                <td>@funcionario.Endereco</td>
+                <td>@funcionario.Funcao</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
 @code {
-    private string search = "";
-
-    private void HandleClick(MouseEventArgs e)
-    {
-        Console.WriteLine("Botão clicado!");
-    }
-
-    private List<AppExemplo.Components.UI.DataTable.Column> columns = new()
-    {
-        new() { Key = "id", Label = "ID" },
-        new() { Key = "nome", Label = "Nome Completo" },
-        new() { Key = "cargo", Label = "Cargo" },
-        new() { Key = "telefone", Label = "Telefone" },
-        new() { Key = "email", Label = "Email" },
-        new() { Key = "cpf", Label = "CPF" },
-        new() { Key = "status", Label = "Status" },
-    };
-
-    private List<Dictionary<string, object?>> rows = new()
-    {
-        new() { { "id", 1 }, { "nome", "Ana" }, { "cargo", "Recepcionista" }, { "telefone", "(99) 99999-0001" }, { "email", "ana@email.com" }, { "cpf", "123.456.789-01" }, { "status", "Ativo" } },
-        new() { { "id", 2 }, { "nome", "Carlos" }, { "cargo", "Instrutor" }, { "telefone", "(99) 99999-0002" }, { "email", "carlos@email.com" }, { "cpf", "123.456.789-02" }, { "status", "Ativo" } },
-        new() { { "id", 3 }, { "nome", "Mariana" }, { "cargo", "Coordenador" }, { "telefone", "(99) 99999-0003" }, { "email", "mariana@email.com" }, { "cpf", "123.456.789-03" }, { "status", "Ativo" } },
-        new() { { "id", 4 }, { "nome", "Lucas" }, { "cargo", "Auxiliar" }, { "telefone", "(99) 99999-0004" }, { "email", "lucas@email.com" }, { "cpf", "123.456.789-04" }, { "status", "Ativo" } },
-    };
-
-    private List<AppExemplo.Components.UI.DataTable.Action> actions = new();
-
-    private IEnumerable<Dictionary<string, object?>> FilteredRows =>
-        string.IsNullOrWhiteSpace(search)
-            ? rows
-            : rows.Where(r => r["nome"]?.ToString()?.Contains(search, StringComparison.OrdinalIgnoreCase) == true);
+    private List<Funcionario> listaFuncionario = new();
 
     protected override void OnInitialized()
     {
-        actions = new()
-        {
-            new AppExemplo.Components.UI.DataTable.Action
-            {
-                Name = "edit",
-                Icon = builder =>
-                {
-                    builder.OpenComponent(0, typeof(AppExemplo.Components.icons.Edit));
-                    builder.CloseComponent();
-                },
-                Handler = EventCallback.Factory.Create<Dictionary<string, object?>>(this, row =>
-                {
-                    Console.WriteLine($"Editar {row["id"]}");
-                })
-            },
-            new AppExemplo.Components.UI.DataTable.Action
-            {
-                Name = "delete",
-                Icon = builder =>
-                {
-                    builder.OpenComponent(0, typeof(AppExemplo.Components.icons.Exclude));
-                    builder.CloseComponent();
-                },
-                Handler = EventCallback.Factory.Create<Dictionary<string, object?>>(this, row =>
-                {
-                    Console.WriteLine($"Excluir {row["id"]}");
-                })
-            }
-        };
+        CarregarFuncionario();
     }
 
-    private void HandleAction((string actionName, Dictionary<string, object?> row) e)
+    private void CarregarFuncionario()
     {
-        Console.WriteLine($"Action: {e.actionName}, Row: {e.row["id"]}");
+        listaFuncionario = FuncionarioDAO.ListarTodos();
     }
 }

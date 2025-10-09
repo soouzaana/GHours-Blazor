@@ -10,6 +10,29 @@ namespace AppExemplo.Models
             _conexao = conexao;
         }
 
+        public void Inserir(Funcionario funcionario)
+        {
+            try
+            {
+                var comando = _conexao.CreateCommand("INSERT INTO funcionario (nome_fun, cpf_fun, telefone_fun, email_fun, endereco_fun, funcao_fun) VALUES (@_nome, @_cpf, @_telefone, @_email, @_endereco, @_funcao)"
+);
+
+                comando.Parameters.AddWithValue("@_nome", funcionario.Nome);
+                comando.Parameters.AddWithValue("@_cpf", funcionario.Cpf);
+                comando.Parameters.AddWithValue("@_telefone", funcionario.Telefone);
+                comando.Parameters.AddWithValue("@_email", funcionario.Email);
+                comando.Parameters.AddWithValue("@_endereco", funcionario.Endereco);
+                comando.Parameters.AddWithValue("@_funcao", funcionario.Funcao);
+
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            
+        }
+
         public List<Funcionario> ListarTodos() { 
         
             var lista = new List<Funcionario>();

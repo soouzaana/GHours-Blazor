@@ -9,6 +9,29 @@ namespace AppExemplo.Models
         {
             _conexao = conexao;
         }
+
+        public void Inserir(Agendamento agendamento)
+        {
+            try
+            {
+                var comando = _conexao.CreateCommand("INSERT INTO Agendamento (data_agen, horaInicial_agen, horaFinal_agen, status_agen, valor_total, data_reserva_agen, id_qua_fk) VALUES (@_data, @_horaInicial, @_horaFinal, @_status, @_valorTotal, @_dataReserva, @_id_qua_fk)");
+
+                comando.Parameters.AddWithValue("@_data", agendamento.Data);
+                comando.Parameters.AddWithValue("@_horaInicial", agendamento.HoraInicial);
+                comando.Parameters.AddWithValue("@_horaFinal", agendamento.HoraFinal);
+                comando.Parameters.AddWithValue("@_status", agendamento.Status);
+                comando.Parameters.AddWithValue("@_valorTotal", agendamento.ValorTotal);
+                comando.Parameters.AddWithValue("@_dataReserva", agendamento.DataReserva);
+                comando.Parameters.AddWithValue("@_id_qua_fk", agendamento.QuadraId);
+
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            
+        }
         
         public List<Agendamento> ListarTodos()
         {

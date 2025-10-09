@@ -1,4 +1,6 @@
 ﻿@page "/quadras"
+@using AppExemplo.Models;
+@inject QuadraDAO QuadraDAO;
 
 <PageTitle>Quadras</PageTitle>
 
@@ -19,85 +21,39 @@
 
 <h1 class="main-title text-2xl font-semibold mt-3">Quadras</h1>
 
-<div>
-    <div class="flex gap-10 justify-content-between align-items-center mb-5">
-        <AppExemplo.Components.VV.TextField Label="Pesquisar" Placeholder="Digite algo..." @bind-Value="search" />
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Descrição</th>
+            <th>Valor</th>
+            <th>Status</th>
+        </tr>
+    </thead>
 
-        <AppExemplo.Components.UI.Button OutlineOnClick="true" OnClick="HandleClick">
-            <AppExemplo.Components.icons.Add />
-        </AppExemplo.Components.UI.Button>
+    <tbody>
+        @foreach (var quadra in listaQuadras)
+        {
+            <tr>
+                <td>@quadra.Nome</td>
+                <td>@quadra.Descricao</td>
+                <td>@quadra.Valor</td>
+                <td>@quadra.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>
 
-    </div>
-    <AppExemplo.Components.UI.DataTable Columns="columns" Rows="rows" Actions="actions" OnAction="HandleAction" />
-</div>
 @code {
-    private string search = "";
-
-    private void HandleClick(MouseEventArgs e)
-    {
-        Console.WriteLine("Botão clicado!");
-    }
-
-    private List<AppExemplo.Components.UI.DataTable.Column> columns = new()
-    {
-        new() { Key = "id", Label = "ID" },
-        new() { Key = "nome", Label = "Nome" },
-        new() { Key = "numero", Label = "Número" },
-        new() { Key = "tipo", Label = "Tipo" },
-        new() { Key = "valor", Label = "Valor" },
-        new() { Key = "status", Label = "Status" }
-    };
-
-    private List<Dictionary<string, object?>> rows = new()
-    {
-        new() { { "id", 1 }, { "nome", "Quadra A" }, { "numero", 1 }, { "tipo", "Futebol" }, { "valor", "R$50" }, { "status", "Ativo" } },
-        new() { { "id", 2 }, { "nome", "Quadra B" }, { "numero", 2 }, { "tipo", "Basquete" }, { "valor", "R$60" }, { "status", "Ativo" } },
-        new() { { "id", 3 }, { "nome", "Quadra C" }, { "numero", 3 }, { "tipo", "Vôlei" }, { "valor", "R$55" }, { "status", "Ativo" } },
-        new() { { "id", 4 }, { "nome", "Quadra D" }, { "numero", 4 }, { "tipo", "Futebol" }, { "valor", "R$70" }, { "status", "Ativo" } },
-    };
-
-    private List<AppExemplo.Components.UI.DataTable.Action> actions = new();
-
-    private IEnumerable<Dictionary<string, object?>> FilteredRows =>
-        string.IsNullOrWhiteSpace(search)
-            ? rows
-            : rows.Where(r => r["nome"]?.ToString()?.Contains(search, StringComparison.OrdinalIgnoreCase) == true);
+    private List<Quadra> listaQuadras = new();
 
     protected override void OnInitialized()
     {
-        actions = new()
-        {
-            new AppExemplo.Components.UI.DataTable.Action
-            {
-                Name = "edit",
-                Icon = builder =>
-                {
-                    builder.OpenComponent(0, typeof(AppExemplo.Components.icons.Edit));
-                    builder.CloseComponent();
-                },
-                Handler = EventCallback.Factory.Create<Dictionary<string, object?>>(this, row =>
-                {
-                    Console.WriteLine($"Editar {row["id"]}");
-                })
-            },
-            new AppExemplo.Components.UI.DataTable.Action
-            {
-                Name = "delete",
-                Icon = builder =>
-                {
-                    builder.OpenComponent(0, typeof(AppExemplo.Components.icons.Exclude));
-                    builder.CloseComponent();
-                },
-                Handler = EventCallback.Factory.Create<Dictionary<string, object?>>(this, row =>
-                {
-                    Console.WriteLine($"Excluir {row["id"]}");
-                })
-            }
-        };
+        CarregarQuadras();
     }
 
-    private void HandleAction((string actionName, Dictionary<string, object?> row) e)
+    private void CarregarQuadras()
     {
-        Console.WriteLine($"Action: {e.actionName}, Row: {e.row["id"]}");
+        listaQuadras = QuadraDAO.ListarTodos();
     }
 }

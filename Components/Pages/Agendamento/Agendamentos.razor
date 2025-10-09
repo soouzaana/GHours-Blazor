@@ -1,4 +1,7 @@
 ﻿@page "/agendamentos"
+@using AppExemplo.Models;
+@using System.ComponentModel
+@inject AgendamentoDAO AgendamentoDAO;
 
 <PageTitle>Agendamentos</PageTitle>
 
@@ -19,87 +22,45 @@
 
 <h1 class="main-title text-2xl font-semibold mt-3">Agendamentos</h1>
 
-<div>
-    <div class="flex gap-10 justify-content-between align-items-center mb-5">
-        <AppExemplo.Components.VV.TextField Label="Pesquisar" Placeholder="Digite algo..." @bind-Value="search" />
+<table class="table">
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>HoraInicial</th>
+            <th>HoraFinal</th>
+            <th>Status</th>
+            <th>ValorTotal</th>
+            <th>DataReserva</th>
+            <th>QuadraId</th>
+        </tr>
+    </thead>
 
-        <AppExemplo.Components.UI.Button OutlineOnClick="true" OnClick="HandleClick">
-            <AppExemplo.Components.icons.Add />
-        </AppExemplo.Components.UI.Button>
+    <tbody>
+        @foreach (var agendamento in listaAgendamentos)
+        {
+            <tr>
+                <td>@agendamento.Data</td>
+                <td>@agendamento.HoraInicial</td>
+                <td>@agendamento.HoraFinal</td>
+                <td>@agendamento.Status</td>
+                <td>@agendamento.DataReserva</td>
+                <td>@agendamento.ValorTotal</td>
+                <td>@agendamento.QuadraId</td>
+            </tr>
+        }
+    </tbody>
+</table>
 
-    </div>
-    <AppExemplo.Components.UI.DataTable Columns="columns" Rows="rows" Actions="actions" OnAction="HandleAction" />
-</div>
 @code {
-    private string search = "";
-
-    private void HandleClick(MouseEventArgs e)
-    {
-        Console.WriteLine("Botão clicado!");
-    }
-
-    private List<AppExemplo.Components.UI.DataTable.Column> columns = new()
-    {
-        new() { Key = "id", Label = "ID" },
-        new() { Key = "nome", Label = "Nome Completo" },
-        new() { Key = "quadra", Label = "Quadra" },
-        new() { Key = "numeroQuadra", Label = "Nº Quadra" },
-        new() { Key = "tempo", Label = "Tempo" },
-        new() { Key = "valor0Hora", Label = "Valor/Hora" },
-        new() { Key = "valorTotal", Label = "Valor Total" },
-        new() { Key = "status", Label = "Status" },
-    };
-
-    private List<Dictionary<string, object?>> rows = new()
-    {
-        new() { { "id", 1 }, { "nome", "Ana" }, { "quadra", "Quadra A" }, { "numeroQuadra", 1 }, { "tempo", "1h" }, { "valor0Hora", "R$50" }, { "valorTotal", "R$50" }, { "status", "Ativo" } },
-        new() { { "id", 2 }, { "nome", "Carlos" }, { "quadra", "Quadra B" }, { "numeroQuadra", 2 }, { "tempo", "2h" }, { "valor0Hora", "R$50" }, { "valorTotal", "R$100" }, { "status", "Ativo" } },
-        new() { { "id", 3 }, { "nome", "Mariana" }, { "quadra", "Quadra C" }, { "numeroQuadra", 3 }, { "tempo", "1h30" }, { "valor0Hora", "R$50" }, { "valorTotal", "R$75" }, { "status", "Ativo" } },
-        new() { { "id", 4 }, { "nome", "Lucas" }, { "quadra", "Quadra D" }, { "numeroQuadra", 4 }, { "tempo", "3h" }, { "valor0Hora", "R$50" }, { "valorTotal", "R$150" }, { "status", "Ativo" } },
-    };
-
-    private List<AppExemplo.Components.UI.DataTable.Action> actions = new();
-
-    private IEnumerable<Dictionary<string, object?>> FilteredRows =>
-        string.IsNullOrWhiteSpace(search)
-            ? rows
-            : rows.Where(r => r["nome"]?.ToString()?.Contains(search, StringComparison.OrdinalIgnoreCase) == true);
+    private List<Agendamento> listaAgendamentos = new();
 
     protected override void OnInitialized()
     {
-        actions = new()
-        {
-            new AppExemplo.Components.UI.DataTable.Action
-            {
-                Name = "edit",
-                Icon = builder =>
-                {
-                    builder.OpenComponent(0, typeof(AppExemplo.Components.icons.Edit));
-                    builder.CloseComponent();
-                },
-                Handler = EventCallback.Factory.Create<Dictionary<string, object?>>(this, row =>
-                {
-                    Console.WriteLine($"Editar {row["id"]}");
-                })
-            },
-            new AppExemplo.Components.UI.DataTable.Action
-            {
-                Name = "delete",
-                Icon = builder =>
-                {
-                    builder.OpenComponent(0, typeof(AppExemplo.Components.icons.Exclude));
-                    builder.CloseComponent();
-                },
-                Handler = EventCallback.Factory.Create<Dictionary<string, object?>>(this, row =>
-                {
-                    Console.WriteLine($"Excluir {row["id"]}");
-                })
-            }
-        };
+        CarregarAgendamento();
     }
 
-    private void HandleAction((string actionName, Dictionary<string, object?> row) e)
+    private void CarregarAgendamento()
     {
-        Console.WriteLine($"Action: {e.actionName}, Row: {e.row["id"]}");
+        listaAgendamentos = AgendamentoDAO.ListarTodos();
     }
 }
