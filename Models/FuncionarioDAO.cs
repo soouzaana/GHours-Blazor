@@ -1,5 +1,6 @@
 using AppExemplo.Configs;
 
+
 namespace AppExemplo.Models
 {
     public class FuncionarioDAO
