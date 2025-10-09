@@ -30,14 +30,14 @@ CREATE TABLE quadra (
 );
 
 CREATE TABLE agendamento (
-	id_agen INT AUTO_INCREMENT,
+	  id_agen INT AUTO_INCREMENT,
     data_agen DATE,
     horaInicial_agen TIME,
     horaFinal_agen TIME, 
     status_agen VARCHAR(50),
     valor_total DECIMAL (10, 2),
     data_reserva_agen date,
-    PRIMARY KEY (id_agen)
+    PRIMARY KEY (id_agen),
     id_qua_fk int not null,
 	  FOREIGN KEY (id_qua_fk) REFERENCES quadra(id_qua)
 );
@@ -74,7 +74,6 @@ VALUES
   ('2025-07-12', '10:00:00', '11:00:00', 'Cancelado', 130.00, '2025-06-22', 3);
 
 -- Consultando os dados inseridos
-
 SELECT * FROM cliente;
 SELECT * FROM funcionario;
 SELECT * FROM quadra;

@@ -1,5 +1,5 @@
 ﻿@page "/relatorios"
-@using AppExemplo.Models;
+@* @using AppExemplo.Models; *@
 
 
 <PageTitle>Relatório de Agendamento de Quadras</PageTitle>
@@ -21,6 +21,103 @@
 
 <h1 class="main-title text-2xl font-semibold mt-3">Relatório de Agendamento de Quadras</h1>
  
+
+<div>
+	<div class="flex gap-7 items-end mb-4">
+		<AppExemplo.Components.VV.TextField Label="Data Inicial" Placeholder="Digite a data inicial..." @bind-Value="dataInicial" class="flex-1" />
+		<AppExemplo.Components.VV.TextField Label="Data Final" Placeholder="Digite a data final..." @bind-Value="dataFinal" class="flex-1" />
+		<AppExemplo.Components.VV.AutoComplete Label="Quadra" Placeholder="Selecione uma quadra..." Options="@quadras" @bind-Value="selectedQuadra" class="flex-1">
+			<Icon>
+				<AppExemplo.Components.icons.Arrow />
+			</Icon>
+		</AppExemplo.Components.VV.AutoComplete>
+
+		<!-- Botão na mesma linha -->
+		<div class="flex-shrink-0">
+			<AppExemplo.Components.UI.Button OutlineOnClick="true" OnClick="HandleClick" class="h-full">
+				GERAR RELATÓRIO
+				<AppExemplo.Components.icons.Eye />
+			</AppExemplo.Components.UI.Button>
+		</div>
+	</div>
+
+
+	<div class="content">
+		<AppExemplo.Components.UI.DataTable Columns="columns" Rows="rows" Actions="actions" OnAction="HandleAction" />
+	</div>
+
+	<div class="buttons-section flex-column mt-5 align-content-end">
+		<AppExemplo.Components.UI.Button OutlineOnClick="true" OnClick="HandleClick">
+			EXPORTAR PARA PDF
+			<AppExemplo.Components.icons.PDF />
+		</AppExemplo.Components.UI.Button>
+
+		<AppExemplo.Components.UI.Button OutlineOnClick="true" OnClick="HandleClick">
+			EXPORTAR PARA EXCEL
+			<AppExemplo.Components.icons.Excel />
+		</AppExemplo.Components.UI.Button>
+	</div>
+</div>
+
+@code {
+	// Bind das datas
+	private string dataInicial = "";
+	private string dataFinal = "";
+
+	// Bind do AutoComplete
+	private string? selectedQuadra;
+
+	// Opções simuladas
+	private List<string> quadras = new()
+	{
+		"Aguardando",
+		"Cancelado",
+		"Confirmado"
+	};
+
+	// Colunas e linhas do DataTable (exemplo)
+	private List<AppExemplo.Components.UI.DataTable.Column> columns = new()
+	{
+		new() { Key = "nome", Label = "Nome" },
+		new() { Key = "quadra", Label = "Quadra" },
+		new() { Key = "data", Label = "Data" },
+		new() { Key = "status", Label = "Status" }
+	};
+
+	private List<Dictionary<string, object>> rows = new()
+	{
+		new() { { "nome", "João" }, { "quadra", "Quadra A" }, { "data", "28/09/2025" }, { "status", "Confirmado" } },
+		new() { { "nome", "Maria" }, { "quadra", "Quadra B" }, { "data", "29/09/2025" }, { "status", "Aguardando" } }
+	};
+
+	private List<AppExemplo.Components.UI.DataTable.Action> actions = new()
+	{
+		new() { Icon = builder =>
+			{
+				builder.OpenComponent(0, typeof(AppExemplo.Components.icons.Edit));
+				builder.CloseComponent();
+			}, Name = "Editar" },
+		new() {  Icon = builder =>
+			{
+				builder.OpenComponent(0, typeof(AppExemplo.Components.icons.Exclude));
+				builder.CloseComponent();
+			}, Name = "Excluir" }
+	};
+
+	private void HandleClick(MouseEventArgs e)
+	{
+		Console.WriteLine($"Botão clicado! Data Inicial: {dataInicial}, Data Final: {dataFinal}, Quadra: {selectedQuadra}");
+	}
+
+	private void HandleAction((string actionName, Dictionary<string, object?> row) e)
+	{
+		Console.WriteLine($"Ação {e.actionName} executada para {e.row["nome"]}");
+	}
+}
+
+
+
+
 @* <table class="table">
 	<thead>
 		<tr>

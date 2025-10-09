@@ -13,6 +13,7 @@ builder.Services.AddSingleton<AgendamentoDAO>();
 builder.Services.AddSingleton<ClienteDAO>();
 builder.Services.AddSingleton<FuncionarioDAO>();
 builder.Services.AddSingleton<QuadraDAO>();
+// builder.Services.AddSingleton<RelatorioDAO>();
 
 var app = builder.Build();
 
