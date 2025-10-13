@@ -23,6 +23,23 @@
 
 @* ahef para o botao de + *@
 
+<div class="flex gap-10 justify-content-between align-items-center mb-5">
+    <AppExemplo.Components.VV.TextField Label="Pesquisar" Placeholder="Digite algo..." @bind-Value="search" />
+
+    <AppExemplo.Components.UI.Button OutlineOnClick="true" OnClick="HandleClick">
+        <AppExemplo.Components.icons.Add />
+    </AppExemplo.Components.UI.Button>
+</div>
+
+@code {
+    private string search = "";
+
+    private void HandleClick(MouseEventArgs e)
+    {
+        Console.WriteLine("Botão clicado!");
+    }
+}
+
 <table class="table">
     <thead>
         <tr>
