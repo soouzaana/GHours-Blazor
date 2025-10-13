@@ -22,39 +22,7 @@
 
 <h1 class="main-title text-2xl font-semibold mt-3">Clientes Cadastrados</h1>
 
-@* ahef para o botao de + *@
-@* <a href="/cliente-form" class="btn btn-sm btn-primary">+++++</a>
-<ButtonDefault><IconAdd /> </ButtonDefault> *@
-@* <a href="/cliente-form" class="btn btn-sm btn-primary">
-    <ButtonDefault>
-        <IconAdd />
-    </ButtonDefault>
-</a> *@
-
-
-
-
-<div class="flex gap-10 justify-content-between align-items-center mb-5">
-    <AppExemplo.Components.VV.TextField Label="Pesquisar" Placeholder="Digite algo..." @bind-Value="search" />
-
-    <AppExemplo.Components.UI.Button OutlineOnClick="true" OnClick="@(() => Navigation.NavigateTo("/cliente-form"))">
-        <AppExemplo.Components.icons.Add />
-    </AppExemplo.Components.UI.Button>
-</div>
-@* 
-    <AppExemplo.Components.UI.Button OutlineOnClick="true" OnClick="HandleClick">
-        <AppExemplo.Components.icons.Add />
-    </AppExemplo.Components.UI.Button>
-</div> *@
-
-@code {
-    private string search = "";
-
-    private void HandleClick(MouseEventArgs e)
-    {
-        Console.WriteLine("Botão clicado!");
-    }
-}
+<a href="/cliente-form" class="btn btn-sm btn-primary">Novo Cliente</a>
 
 <table class="table">
     <thead>
