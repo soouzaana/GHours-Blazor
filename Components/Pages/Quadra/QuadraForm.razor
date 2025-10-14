@@ -1,0 +1,60 @@
+@page "/quadra-form"
+@rendermode InteractiveServer
+
+@using AppExemplo.Models;
+@inject QuadraDAO QuadraDAO;
+@inject NavigationManager Navigation;
+
+<PageTitle>Cadastro de Quadra</PageTitle>
+
+<h1 class="main-title text-2xl font-semibold mt-3">Nova Quadra</h1>
+
+@if (erro != null)
+{
+    <div class="alert alert-danger">
+        @erro
+    </div>
+}
+
+<div class="row">
+    <div class="col">
+        <form>
+            <div class="form-group mb-4">
+                <label>Nome</label>
+                <input @bind="_novaQuadra.Nome" type="text" class="form-control" name="nome" placeholder="Informe o nome" />
+            </div>
+
+            <div class="form-group mb-4">
+                <label>Descrição</label>
+                <input @bind="_novaQuadra.Descricao" type="text" class="form-control" name="descricao" placeholder="Escreva a descrição" />
+            </div>
+
+            <div class="form-group mb-4">
+                <label>Valor</label>
+                <input @bind="_novaQuadra.Valor" type="decimal" class="form-control" name="valor" placeholder="Informe o valor" />
+            </div>
+
+            <div class="form-group mb-4">
+                <label>Status</label>
+                <input @bind="_novaQuadra.Status" type="text" class="form-control" name="status" placeholder="Informe o status" />
+            </div>
+
+            <button @onclick="Salvar" class="btn btn-primary">Salvar</button>
+        </form>
+    </div>
+</div>
+
+@code {
+    private string? erro = null;
+
+    private Quadra _novaQuadra = new()
+    {
+        Nome = "",
+        Status = ""
+    };
+
+    private void Salvar()
+    {
+        QuadraDAO.Inserir(_novaQuadra);
+    }
+}
