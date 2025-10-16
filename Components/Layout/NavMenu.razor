@@ -18,10 +18,7 @@
             <span class="sidebar-text">Home</span>
         </a>
 
-        <NavLink class="flex items-center gap-3 p-2 rounded-lg hover:bg-[#808080] text-white" href="/relatorios" Match="NavLinkMatch.All">
-            <AppExemplo.Components.icons.Report/>
-            <span class="sidebar-text">Relatórios</span>
-        </NavLink>
+
 
 
         <a href="/clientes"
@@ -47,7 +44,18 @@
             <AppExemplo.Components.icons.Court />
             <span class="sidebar-text">Quadras</span>
         </a>
-    </nav>
+
+        <a href="/relatorios"
+           class="flex items-center gap-3 p-2 rounded-lg hover:bg-[#808080] text-white">
+            <AppExemplo.Components.icons.Report />
+            <span class="sidebar-text">Relatórios</span>
+        </a>
+    </nav>        
+    
+        @* <NavLink class="flex items-center gap-3 p-2 rounded-lg hover:bg-[#808080] text-white" href="/relatorios" Match="NavLinkMatch.All">
+            <AppExemplo.Components.icons.Report/>
+            <span class="sidebar-text">Relatórios</span>
+        </NavLink> *@
 
     <!-- Sair no final -->
     <a href="/configuracoes-page"

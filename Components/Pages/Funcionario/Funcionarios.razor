@@ -1,6 +1,7 @@
 ﻿@page "/funcionarios"
 @using AppExemplo.Models;
 @inject FuncionarioDAO FuncionarioDAO;
+@inject NavigationManager Navigation;
 
 <PageTitle>Funcionarios</PageTitle>
 
@@ -21,6 +22,7 @@
 
 <h1 class="main-title text-2xl font-semibold mt-3">Funcionários Cadastrados</h1>
 
+<a href="/funcionario-form" class="btn btn-sm btn-primary">Novo Funcionario</a>
 
 <table class="table">
     <thead>

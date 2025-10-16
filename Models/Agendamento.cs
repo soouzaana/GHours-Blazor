@@ -3,7 +3,9 @@ namespace AppExemplo.Models
     public class Agendamento
     {
         public int Id { get; set; }
+        // public int ClienteId { get; set; }
         public DateTime Data { get; set; }
+        
         public TimeSpan HoraInicial { get; set; }
         public TimeSpan HoraFinal { get; set; }
         public required string Status { get; set; }

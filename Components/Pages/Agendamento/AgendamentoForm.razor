@@ -1,0 +1,141 @@
+@page "/agendamento-form"
+@rendermode InteractiveServer
+
+@using AppExemplo.Models;
+@using System.Globalization;
+@inject AgendamentoDAO AgendamentoDAO;
+@inject NavigationManager Navigation;
+
+<PageTitle>Agendamento</PageTitle>
+
+<h1 class="main-title text-2xl font-semibold mt-3">Novo Agendamento</h1>
+
+
+@if (erro != null)
+{
+    <div class="alert alert-danger">
+        @erro
+    </div>
+}
+
+<div class="row">
+    <div class="col">
+        <form>
+            @* <div class="form-group mb-4">
+                <label>Cliente</label>
+                <input @bind="_novoAgendamento.ClienteId" type="number" class="form-control" name="clienteId" placeholder="Informe o ID do cliente" />
+            </div> *@
+            <div class="form-group mb-4">
+                <label>Data</label>
+                <input @bind="_novoAgendamento.Data" type="date" class="form-control" name="data" />
+            </div>
+            <div class="form-group mb-4">
+                <label>Hora Inicial</label>
+                <input @bind="_novoAgendamento.HoraInicial" type="timespan" class="form-control" name="horaInicial" />
+            </div>
+            <div class="form-group mb-4">
+                <label>Hora Final</label>
+                <input @bind="_novoAgendamento.HoraFinal" type="timespan" class="form-control" name="horaFinal" />
+            </div>
+            <div class="form-group mb-4">
+                <label>Status</label>
+                <input @bind="_novoAgendamento.Status" type="text" class="form-control" name="status" placeholder="Informe o status" /> 
+            </div>
+            <div class="form-group mb-4">
+                <label>Valor Total</label>
+                <input @bind="_novoAgendamento.ValorTotal" type="number" step="0.01" class="form-control" name="valorTotal" placeholder="Informe o valor total" />  
+            </div>
+            <div class="form-group mb-4">
+                <label>Data Reservada</label>
+                <input @bind="_novoAgendamento.DataReserva" type="date" class="form-control" name="dataReserva" />
+            </div>
+            <button @onclick="Salvar" class="btn btn-primary">Salvar</button>
+        </form>
+    </div>
+</div>
+
+@code {
+    private string? erro = null;
+
+    private Agendamento _novoAgendamento = new()
+    {
+        Status = ""
+    };
+
+    private void Salvar()
+    {
+        AgendamentoDAO.Inserir(_novoAgendamento);
+    }
+}
+
+
+
+
+@*
+            <div class="form-group mb-4">
+                <label>Data Reservada</label>
+                <input @bind="_novoAgendamento.DataReserva" type="date" class="form-control" />
+            </div>
+
+            <!-- type="button" evita submit padrão da página -->
+            <button type="button" @onclick="Salvar" class="btn btn-primary">Salvar</button>
+        </form>
+
+         
+                    <div class="form-group mb-4">
+                <label>Data</label>
+                <input @bind="_novoAgendamento.Data" type="date" class="form-control" />
+            </div>
+
+            <div class="form-group mb-4">
+                <label>Hora Inicial</label>
+                <!-- use type="time" e bind em string -->
+                <input @bind="HoraInicialString" type="time" class="form-control" />
+            </div>
+
+            <div class="form-group mb-4">
+                <label>Hora Final</label>
+                <input @bind="HoraFinalString" type="time" class="form-control" />
+            </div>
+
+            <div class="form-group mb-4">
+                <label>Status</label>
+                <input @bind="_novoAgendamento.Status" type="text" class="form-control" />
+            </div>
+
+            <div class="form-group mb-4">
+                <label>Valor Total</label>
+                <!-- bind na string e converte ao salvar -->
+                <input @bind="ValorTotalString" type="number" step="0.01" class="form-control" />
+            </div>
+
+            <div class="form-group mb-4">
+                <label>Data Reservada</label>
+                <input @bind="_novoAgendamento.DataReserva" type="date" class="form-control" />
+            </div>
+
+            <!-- type="button" evita submit padrão da página -->
+            <button type="button" @onclick="Salvar" class="btn btn-primary">Salvar</button>
+        </form>
+        @if (!string.IsNullOrEmpty(erro))
+        {
+            <div class="alert alert-danger mt-3">@erro</div>
+        }
+    </div>
+</div>
+
+
+@* @code {
+    private string? erro = null;
+
+    private Agendamento _novoAgendamento = new()
+    {
+        Data = DateTime.Now,
+        HoraInicial = DateTime.Now,
+        HoraFinal = DateTime.Now,
+        Status = string.Empty,
+        ValorTotal = 0m,
+        DataReserva = DateTime.Now
+    };
+
+} *@
