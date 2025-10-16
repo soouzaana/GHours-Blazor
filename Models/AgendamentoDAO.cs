@@ -16,6 +16,7 @@ namespace AppExemplo.Models
             {
                 var comando = _conexao.CreateCommand("INSERT INTO Agendamento (data_agen, horaInicial_agen, horaFinal_agen, status_agen, valor_total, data_reserva_agen, id_qua_fk) VALUES (@_data, @_horaInicial, @_horaFinal, @_status, @_valorTotal, @_dataReserva, @_id_qua_fk)");
 
+                // comando.Parameters.AddWithValue("@_clienteId", agendamento.ClienteId);
                 comando.Parameters.AddWithValue("@_data", agendamento.Data);
                 comando.Parameters.AddWithValue("@_horaInicial", agendamento.HoraInicial);
                 comando.Parameters.AddWithValue("@_horaFinal", agendamento.HoraFinal);
@@ -46,9 +47,10 @@ namespace AppExemplo.Models
                 var agendamento = new Agendamento
                 {
                     Id = leitor.GetInt32("id_agen"),
+                    // ClienteId = leitor.GetInt32("clienteId"),
                     Data = leitor.GetDateTime("data_agen"),
-                    HoraInicial = leitor.GetDateTime("horaInicial_agen"),
-                    HoraFinal = leitor.GetDateTime("horaFinal_agen"),
+                    HoraInicial = leitor.GetTimeSpan("horaInicial_agen"),
+                    HoraFinal = leitor.GetTimeSpan("horaFinal_agen"),
                     Status = leitor.GetString("status_agen"),
                     ValorTotal = leitor.GetDecimal("valor_total"),
                     DataReserva = leitor.GetDateTime("data_reserva_agen"),
