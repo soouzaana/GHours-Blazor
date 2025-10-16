@@ -47,8 +47,8 @@ namespace AppExemplo.Models
                 {
                     Id = leitor.GetInt32("id_agen"),
                     Data = leitor.GetDateTime("data_agen"),
-                    HoraInicial = leitor.GetTimeSpan("horaInicial_agen"),
-                    HoraFinal = leitor.GetTimeSpan("horaFinal_agen"),
+                    HoraInicial = leitor.GetDateTime("horaInicial_agen"),
+                    HoraFinal = leitor.GetDateTime("horaFinal_agen"),
                     Status = leitor.GetString("status_agen"),
                     ValorTotal = leitor.GetDecimal("valor_total"),
                     DataReserva = leitor.GetDateTime("data_reserva_agen"),
