@@ -53,8 +53,19 @@
         Status = ""
     };
 
-    private void Salvar()
+   private void Salvar()
     {
-        QuadraDAO.Inserir(_novaQuadra);
+        try
+        {
+            QuadraDAO.Inserir(_novaQuadra);
+            QuadraDAO.Atualizar(_novaQuadra);
+            QuadraDAO.Excluir(_novaQuadra.Id);
+
+            Navigation.NavigateTo("/quadras");
+        }
+        catch (Exception ex)
+        {
+            erro = $"Erro ao salvar o quadra: {ex.Message}";
+        }
     }
 }

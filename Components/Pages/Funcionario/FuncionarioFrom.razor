@@ -69,8 +69,18 @@
 
     private void Salvar()
     {
-        FuncionarioDAO.Inserir(_novoFuncionario);
-        Navigation.NavigateTo("/funcionarios");
+        try
+        {
+            FuncionarioDAO.Inserir(_novoFuncionario);
+            FuncionarioDAO.Atualizar(_novoFuncionario);
+            FuncionarioDAO.Excluir(_novoFuncionario.Id);
+
+            Navigation.NavigateTo("/funcionarios");
+        }
+        catch (Exception ex)
+        {
+            erro = $"Erro ao salvar o funcionario: {ex.Message}";
+        }
     }
 }
 

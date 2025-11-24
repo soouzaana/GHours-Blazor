@@ -48,7 +48,12 @@
                 <td>@agendamento.Status</td>
                 <td>@agendamento.DataReserva</td>
                 <td>@agendamento.ValorTotal</td>
-                @* <td>@agendamento.QuadraId</td> *@
+                <td>
+                    <a href="/agendamento/@agendamento.Id/atualizar" class="btn btn-sm btn-primary mr-2">
+                        <i class="fas fa-edit"></i> Atualizar
+                    </a>
+                    <a href="/agendamento/@agendamento.Id/excluir" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i>Excluir</a>
+                </td>
             </tr>
         }
     </tbody>

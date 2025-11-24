@@ -64,7 +64,18 @@
 
     private void Salvar()
     {
-        AgendamentoDAO.Inserir(_novoAgendamento);
+        try
+        {
+            AgendamentoDAO.Inserir(_novoAgendamento);
+            AgendamentoDAO.Atualizar(_novoAgendamento);
+            AgendamentoDAO.Excluir(_novoAgendamento.Id);
+
+            Navigation.NavigateTo("/agendamentos");
+        }
+        catch (Exception ex)
+        {
+            erro = $"Erro ao salvar o agendamento: {ex.Message}";
+        }
     }
 }
 
