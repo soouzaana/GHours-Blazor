@@ -54,8 +54,19 @@
         Cpf = ""
     };
 
-    private void Salvar()
+   private void Salvar()
     {
-        ClienteDAO.Inserir(_novoCliente);
+        try
+        {
+            ClienteDAO.Inserir(_novoCliente);
+            ClienteDAO.Atualizar(_novoCliente);
+            ClienteDAO.Excluir(_novoCliente.Id);
+
+            Navigation.NavigateTo("/clientes");
+        }
+        catch (Exception ex)
+        {
+            erro = $"Erro ao salvar o cliente: {ex.Message}";
+        }
     }
 }
