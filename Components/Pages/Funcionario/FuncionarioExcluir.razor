@@ -1,0 +1,63 @@
+@page "/funcionario/{Id:int}/excluir"
+@rendermode InteractiveServer
+
+@using AppExemplo.Models;
+@inject FuncionarioDAO funcionarioDAO;
+@inject NavigationManager Navigation;
+
+<PageTitle>Confirmação</PageTitle>
+
+<h2 class="text-xl font-semibold text-gray-800 dark:text-black-100 mb-6">
+    Deseja realmente excluir o registro de @funcionario?.Nome?
+</h2>
+
+@if (erro != string.Empty)
+{
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+        <strong class="font-bold">Erro!</strong>
+        <span class="block sm:inline">@erro</span>
+    </div>
+}
+
+<div class="flex gap-4">
+    <button class="bg-red-600 text-white px-4 py-2 rounded" @onclick="ConfirmarExclusao">Confirmar</button>
+
+    <button class="bg-gray-400 text-white px-4 py-2 rounded" @onclick="Cancelar">Cancelar</button>
+</div>
+
+@code {
+    private string erro = string.Empty;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    private Funcionario? funcionario;
+
+    protected override void OnInitialized()
+    {
+        funcionario = funcionarioDAO.BuscarPorId(Id);
+
+        if (funcionario == null)
+        {
+            erro = "Funcionário não encontrado.";
+        }
+    }
+
+    private void ConfirmarExclusao()
+    {
+        try
+        {
+            funcionarioDAO.Excluir(Id);
+            Navigation.NavigateTo("/funcionarios");
+        }
+        catch (Exception ex)
+        {
+            erro = $"Erro ao excluir: {ex.Message}";
+        }
+    }
+
+    private void Cancelar()
+    {
+        Navigation.NavigateTo("/funcionarios");
+    }
+}

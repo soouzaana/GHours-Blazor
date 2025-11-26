@@ -59,7 +59,7 @@ namespace AppExemplo.Models
          public Cliente? BuscarPorId(int id)
         {
             var comando = _conexao.CreateCommand(
-                "SELECT * FROM cliente WHERE id_pro = @id;");
+                "SELECT * FROM cliente WHERE id_cli = @id;");
             comando.Parameters.AddWithValue("@id", id);
 
             var leitor = comando.ExecuteReader();
@@ -68,11 +68,11 @@ namespace AppExemplo.Models
             {
                 var cliente = new Cliente
                 {
-                    Id = leitor.GetInt32("id_fun"),
+                    Id = leitor.GetInt32("id_cli"),
                     Nome = leitor.GetString("nome_cli"),
                     Cpf = leitor.GetString("cpf_cli"),
-                    Telefone = leitor.GetString("telefone_fun"),
-                    Email = leitor.GetString("email_fun"),
+                    Telefone = leitor.GetString("telefone_cli"),
+                    Email = leitor.GetString("email_cli"),
                 };
 
                 return cliente;

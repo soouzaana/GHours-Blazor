@@ -1,0 +1,87 @@
+@page "/quadra/{Id:int}/atualizar"
+@rendermode InteractiveServer
+
+@using AppExemplo.Models;
+@inject QuadraDAO quadraDAO;
+@inject NavigationManager Navigation;
+
+<PageTitle>Quadra</PageTitle>
+
+<h1 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-6">Atualização Quadra - @quadra.Nome</h1>
+
+@if (erro != string.Empty)
+{
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+        <strong class="font-bold">Erro!</strong>
+        <span class="block sm:inline">@erro</span>
+    </div>
+}
+
+<EditForm Model="quadra" OnSubmit="Salvar">
+    <div class="form-group mb-4">
+        <label>Nome</label>
+        <input @bind="quadra.Nome" type="text" class="form-control" name="nome" placeholder="Informe o nome" />
+    </div>
+
+    <div class="form-group mb-4">
+        <label>Descrição</label>
+        <input @bind="quadra.Descricao" type="text" class="form-control" name="descricao" placeholder="Escreva a descrição" />
+    </div>
+
+    <div class="form-group mb-4">
+        <label>Valor</label>
+        <input @bind="quadra.Valor" type="decimal" class="form-control" name="valor" placeholder="Informe o valor" />
+    </div>
+
+    <div class="form-group mb-4">
+        <label>Status</label>
+        <input @bind="quadra.Status" type="text" class="form-control" name="status" placeholder="Informe o status" />
+    </div>
+    <button @onclick="Salvar" class="btn btn-primary">Salvar</button>
+</EditForm>
+
+@code {
+
+    private string erro = string.Empty;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    private Quadra quadra { get; set; } = new Quadra
+    {
+        Nome = string.Empty,
+        Descricao = string.Empty,
+        Valor = 0,
+        Status = string.Empty
+    };
+
+
+    protected override void OnInitialized()
+    {
+        var _quadra = quadraDAO.BuscarPorId(Id);
+
+        if (_quadra != null)
+        {
+            quadra = _quadra;
+        }
+        else
+        {
+            erro = "Quadra não encontrada.";
+        }
+    }
+
+    private void Salvar()
+    {
+        try
+        {
+            quadraDAO.Atualizar(quadra);
+
+            Navigation.NavigateTo("/Quadras");
+        }
+        catch (Exception ex)
+        {
+        erro = $"Erro ao salvar a quadra: {ex.Message}";
+        }
+
+    }
+}

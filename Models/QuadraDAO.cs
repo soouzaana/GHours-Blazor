@@ -30,56 +30,53 @@ namespace AppExemplo.Models
             
         }
 
-        public List<Quadra> ListarTodos() { 
-        
-            var lista = new List<Quadra>();
-
-            var comando = _conexao.CreateCommand("SELECT * FROM quadra");
-            var leitor = comando.ExecuteReader();
-
-            while(leitor.Read())
+            public List<Quadra> ListarTodos()
             {
-                var quadra = new Quadra
-                {
-                    Id = leitor.GetInt32("id_qua"),
-                    Nome = leitor.GetString("nome_qua"),
-                    Descricao = leitor.GetString("descricao_qua"),  
-                    Valor = leitor.GetDecimal("valor_qua"),
-                    Status = leitor.GetString("status_qua")
-                };
+                var lista = new List<Quadra>();
+                var comando = _conexao.CreateCommand("SELECT * FROM quadra");
 
-                lista.Add(quadra);
+                using var leitor = comando.ExecuteReader();
+                while (leitor.Read())
+                {
+                    var quadra = new Quadra
+                    {
+                        Id = leitor.GetInt32("id_qua"),
+                        Nome = leitor.GetString("nome_qua"),
+                        Descricao = leitor.IsDBNull(leitor.GetOrdinal("descricao_qua")) ? string.Empty : leitor.GetString("descricao_qua"),
+                        Valor = leitor.IsDBNull(leitor.GetOrdinal("valor_qua")) ? 0 : leitor.GetDecimal("valor_qua"),
+                        Status = leitor.IsDBNull(leitor.GetOrdinal("status_qua")) ? string.Empty : leitor.GetString("status_qua")
+                    };
+
+                    lista.Add(quadra);
+                }
+
+                return lista;
             }
-            return lista;
-        }
 
             public Quadra? BuscarPorId(int id)
             {
                 var comando = _conexao.CreateCommand("SELECT * FROM quadra WHERE id_qua = @_id");
                 comando.Parameters.AddWithValue("@_id", id);
 
-                var leitor = comando.ExecuteReader();
-    
-                Quadra? quadra = null;
+                using var leitor = comando.ExecuteReader();
+
                 if (leitor.Read())
                 {
-                    quadra = new Quadra
+                    var quadra = new Quadra
                     {
                         Id = leitor.GetInt32("id_qua"),
                         Nome = leitor.GetString("nome_qua"),
-                        Descricao = leitor.GetString("descricao_qua"),
-                        Valor = leitor.GetDecimal("valor_qua"),
-                        Status = leitor.GetString("status_qua")
+                        Descricao = leitor.IsDBNull(leitor.GetOrdinal("descricao_qua")) ? string.Empty : leitor.GetString("descricao_qua"),
+                        Valor = leitor.IsDBNull(leitor.GetOrdinal("valor_qua")) ? 0 : leitor.GetDecimal("valor_qua"),
+                        Status = leitor.IsDBNull(leitor.GetOrdinal("status_qua")) ? string.Empty : leitor.GetString("status_qua")
                     };
 
                     return quadra;
                 }
-                else
-                {
-                    return null;
-                }
-              
+
+                return null;
             }
+
 
             public void Atualizar(Quadra quadra)
             {

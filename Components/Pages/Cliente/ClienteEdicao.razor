@@ -1,0 +1,88 @@
+@page "/cliente/{Id:int}/atualizar"
+@rendermode InteractiveServer
+
+@using AppExemplo.Models;
+@inject ClienteDAO clienteDAO;
+@inject NavigationManager Navigation;
+
+<PageTitle>Cliente</PageTitle>
+
+<h1 class="text-xl font-semibold text-gray-800 dark:text-black-100 mb-6">Atualização Cliente - @cliente.Nome</h1>
+
+@if (erro != string.Empty)
+{
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+        <strong class="font-bold">Erro!</strong>
+        <span class="block sm:inline">@erro</span>
+    </div>
+}
+
+<EditForm Model="cliente" OnSubmit="Salvar">
+    <div class="form-group mb-4">
+        <label>Nome</label>
+        <input @bind="cliente.Nome" type="text" class="form-control" name="nome" placeholder="Informe o nome" />
+    </div>
+
+    <div class="form-group mb-4">
+        <label>Telefone</label>
+        <input @bind="cliente.Telefone" type="text" class="form-control" name="telefone" placeholder="Informe o telefone" />
+    </div>
+
+    <div class="form-group mb-4">
+        <label>Email</label>
+        <input @bind="cliente.Email" type="text" class="form-control" name="email" placeholder="Informe o email" />
+    </div>
+
+    <div class="form-group mb-4">
+        <label>CPF</label>
+        <input @bind="cliente.Cpf" type="text" class="form-control" name="cpf" placeholder="Informe o CPF" />
+    </div>
+
+    <button @onclick="Salvar" class="btn btn-primary">Salvar</button>
+</EditForm>
+
+@code {
+
+    private string erro = string.Empty;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    private Cliente cliente { get; set; } = new Cliente
+{
+    Nome = string.Empty,
+    Cpf = string.Empty,
+    Telefone = string.Empty,
+    Email = string.Empty
+};
+
+
+    protected override void OnInitialized()
+    {
+        var _cliente = clienteDAO.BuscarPorId(Id);
+
+        if (_cliente != null)
+        {
+            cliente = _cliente;
+        }
+        else
+        {
+            erro = "Cliente não encontrado.";
+        }
+    }
+
+    private void Salvar()
+    {
+        try
+        {
+            clienteDAO.Atualizar(cliente);
+
+            Navigation.NavigateTo("/Clientes");
+        }
+        catch (Exception ex)
+        {
+        erro = $"Erro ao salvar o cliente: {ex.Message}";
+        }
+
+    }
+}

@@ -62,8 +62,7 @@ namespace AppExemplo.Models
         
         public Funcionario? BuscarPorId(int id)
         {
-            var comando = _conexao.CreateCommand(
-                "SELECT * FROM funcionario WHERE id_pro = @id;");
+            var comando = _conexao.CreateCommand("SELECT * FROM funcionario WHERE id_fun = @id;");
             comando.Parameters.AddWithValue("@id", id);
 
             var leitor = comando.ExecuteReader();
