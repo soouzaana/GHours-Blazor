@@ -1,9 +1,13 @@
 ﻿@page "/funcionarios"
-@using AppExemplo.Models;
-@inject FuncionarioDAO FuncionarioDAO;
-@inject NavigationManager Navigation;
+@using AppExemplo.Models
+@inject FuncionarioDAO FuncionarioDAO
+@inject NavigationManager Navigation
+@using AppExemplo.Components
+@using AppExemplo.Components.VV
+@using AppExemplo.Components.icons
+@rendermode InteractiveServer
 
-<PageTitle>Funcionarios</PageTitle>
+<PageTitle>Funcionários Cadastrados</PageTitle>
 
 <style>
     .main-title {
@@ -11,62 +15,290 @@
         font-weight: 600;
     }
 
-        .main-title::before {
-            content: "";
-            width: 8px;
-            height: 100%;
-            border: 2px solid #e39b34;
-            margin-right: 0.5rem;
-        }
+    .main-title::before {
+        content: "";
+        width: 8px;
+        height: 100%;
+        border: 2px solid #e39b34;
+        margin-right: 0.5rem;
+    }
+
+    .btn-novo-funcionario {
+        position: fixed;
+        top: 110px;
+        left: 1150px;
+        width: 55px;
+        height: 55px;
+        border-radius: 25%;
+        background-color: #e39b34;
+        color: white;
+        border: none;
+        font-size: 32px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0,0,0,.3);
+        transition: 0.2s;
+    }
+
+    .btn-novo-funcionario:hover {
+        transform: scale(1.1);
+    }
+
+    .btn-save {
+        background-color: #e39b34;
+        color: white;
+    }
 </style>
 
 <h1 class="main-title text-2xl font-semibold mt-3">Funcionários Cadastrados</h1>
 
-<a href="/funcionario-form" class="btn btn-sm btn-primary">Novo Funcionario</a>
+<button class="btn-novo-funcionario" @onclick="AbrirModal">
+    +
+</button>
+
+@if (modalAberto)
+{
+    <div class="modal-backdrop fade show" style="position: fixed; inset: 0; z-index:1040;"></div>
+
+    <div class="modal fade show d-block" style="z-index:1050;">
+        <div class="modal-dialog">
+            <div class="modal-content p-4">
+
+                <h4 class="main-title text-xl font-semibold mb-3">Cadastrar Funcionário</h4>
+
+                <div class="d-flex gap-3 mb-3">
+                    <TextField Label="Nome" Placeholder="Digite o nome..." @bind-Value="_novoFuncionario.Nome" class="flex-1" />
+                </div>
+
+                <div class="d-flex gap-3 mb-3">
+                    <TextField Label="Telefone" Placeholder="Digite o telefone..." @bind-Value="_novoFuncionario.Telefone" class="flex-1" />
+                </div>
+
+                <div class="d-flex gap-3 mb-3">
+                    <TextField Label="Email" Placeholder="Digite o email..." @bind-Value="_novoFuncionario.Email" class="flex-1" />
+                </div>
+
+                <div class="d-flex gap-3 mb-3">
+                    <TextField Label="CPF" Placeholder="Digite o CPF..." @bind-Value="_novoFuncionario.Cpf" class="flex-1" />
+                </div>
+
+                <div class="d-flex gap-3 mb-3">
+                    <TextField Label="Endereço" Placeholder="Digite o endereço..." @bind-Value="_novoFuncionario.Endereco" class="flex-1" />
+                </div>
+
+                <div class="d-flex gap-3 mb-3">
+                    <TextField Label="Função" Placeholder="Digite a função..." @bind-Value="_novoFuncionario.Funcao" class="flex-1" />
+                </div>
+
+                <div class="d-flex justify-content-end gap-2">
+                    <button class="btn btn-secondary" @onclick="FecharModal">Cancelar</button>
+                    <button class="btn btn-save" @onclick="SalvarModal">Salvar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
 
 <table class="table">
     <thead>
         <tr>
             <th>Nome</th>
-            <th>CPF</th>
             <th>Telefone</th>
-            <th>E-mail</th>
+            <th>Email</th>
+            <th>CPF</th>
             <th>Endereço</th>
             <th>Função</th>
+            <th>Ações</th>
         </tr>
     </thead>
-
     <tbody>
-        @foreach (var funcionario in listaFuncionario)
+        @foreach (var funcionario in listaFuncionarios)
         {
             <tr>
                 <td>@funcionario.Nome</td>
-                <td>@funcionario.Cpf</td>
                 <td>@funcionario.Telefone</td>
                 <td>@funcionario.Email</td>
+                <td>@funcionario.Cpf</td>
                 <td>@funcionario.Endereco</td>
                 <td>@funcionario.Funcao</td>
                 <td>
-                    <a href="/funcionario/@funcionario.Id/atualizar" class="btn btn-sm btn-primary mr-2">
-                        <i class="fas fa-edit"></i> Atualizar
-                    </a>
-                    <a href="/funcionario/@funcionario.Id/excluir" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i>Excluir</a>
+                    <div class="flex">
+                        <a href="javascript:void(0)" class="mr-3" title="Atualizar" @onclick="() => AbrirModalEdicao(funcionario)">
+                            <Icon><Edit /></Icon>
+                        </a>
+                        <a href="javascript:void(0)" title="Excluir" @onclick="() => AbrirModalExcluir(funcionario)">
+                            <Icon><Exclude /></Icon>
+                        </a>
+                    </div>
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
+@if (modalEdicaoAberto)
+{
+    <div class="modal-backdrop fade show"></div>
+    <div class="modal fade show d-block">
+        <div class="modal-dialog">
+            <div class="modal-content p-4">
+
+                <h4 class="main-title">Atualizar Funcionário</h4>
+                    <div class="flex-column gap-3 mb-3">
+                        <TextField Label="Nome" @bind-Value="_funcionarioEdicao.Nome" />
+                    </div>
+                    <div class="flex-column gap-3 mb-3">
+                        <TextField Label="Telefone" @bind-Value="_funcionarioEdicao.Telefone" />
+                    </div>
+                    <div class="flex-column gap-3 mb-3">
+                        <TextField Label="Email" @bind-Value="_funcionarioEdicao.Email" />
+                    </div>
+                    <div class="flex-column gap-3 mb-3">
+                        <TextField Label="CPF" @bind-Value="_funcionarioEdicao.Cpf" />
+                    </div>
+                    <div class="flex-column gap-3 mb-3">
+                        <TextField Label="Endereço" @bind-Value="_funcionarioEdicao.Endereco" />
+                    </div>  
+                    <div class="flex-column gap-3 mb-3">
+                        <TextField Label="Função" @bind-Value="_funcionarioEdicao.Funcao" />
+                    </div>
+                
+
+                <div class="d-flex justify-content-end gap-2 mt-3">
+                    <button class="btn btn-secondary" @onclick="FecharModalEdicao">Cancelar</button>
+                    <button class="btn btn-save" @onclick="SalvarEdicao">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (modalExcluirAberto)
+{
+    <div class="modal-backdrop fade show"></div>
+    <div class="modal fade show d-block">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content p-4 text-center">
+                <h5>Deseja realmente excluir?</h5>
+                <strong>@_funcionarioExcluir?.Nome</strong>
+                <div class="d-flex justify-content-center gap-3 mt-4">
+                    <button class="btn btn-secondary" @onclick="FecharModalExcluir">Cancelar</button>
+                    <button class="btn btn-danger" @onclick="ConfirmarExclusao">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 @code {
-    private List<Funcionario> listaFuncionario = new();
+    private List<Funcionario> listaFuncionarios = new();
+
+    private bool modalAberto = false;
+    private bool modalEdicaoAberto = false;
+    private bool modalExcluirAberto = false;
+
+    private Funcionario _novoFuncionario = new Funcionario
+    {
+        Nome = string.Empty,
+        Telefone = string.Empty,
+        Email = string.Empty,
+        Cpf = string.Empty,
+        Endereco = string.Empty,
+        Funcao = string.Empty
+    };
+
+    private Funcionario _funcionarioEdicao = new Funcionario
+    {
+        Nome = string.Empty,
+        Telefone = string.Empty,
+        Email = string.Empty,
+        Cpf = string.Empty,
+        Endereco = string.Empty,
+        Funcao = string.Empty
+    };
+
+    private Funcionario? _funcionarioExcluir;
 
     protected override void OnInitialized()
     {
-        CarregarFuncionario();
+        CarregarFuncionarios();
     }
 
-    private void CarregarFuncionario()
+    private void CarregarFuncionarios()
     {
-        listaFuncionario = FuncionarioDAO.ListarTodos();
+        listaFuncionarios = FuncionarioDAO.ListarTodos();
+    }
+
+    // CADASTRO
+    private void AbrirModal()
+    {
+        _novoFuncionario = new Funcionario
+        {
+            Nome = "",
+            Telefone = "",
+            Email = "",
+            Cpf = "",
+            Endereco = "",
+            Funcao = ""
+        };
+        modalAberto = true;
+    }
+
+    private void FecharModal() => modalAberto = false;
+
+    private void SalvarModal()
+    {
+        FuncionarioDAO.Inserir(_novoFuncionario);
+        modalAberto = false;
+        CarregarFuncionarios();
+    }
+
+    // EDIÇÃO
+    private void AbrirModalEdicao(Funcionario funcionario)
+    {
+        _funcionarioEdicao = new Funcionario
+        {
+            Id = funcionario.Id,
+            Nome = funcionario.Nome ?? string.Empty,
+            Telefone = funcionario.Telefone ?? string.Empty,
+            Email = funcionario.Email ?? string.Empty,
+            Cpf = funcionario.Cpf ?? string.Empty,
+            Endereco = funcionario.Endereco ?? string.Empty,
+            Funcao = funcionario.Funcao ?? string.Empty
+        };
+        modalEdicaoAberto = true;
+    }
+
+    private void FecharModalEdicao() => modalEdicaoAberto = false;
+
+    private void SalvarEdicao()
+    {
+        FuncionarioDAO.Atualizar(_funcionarioEdicao);
+        modalEdicaoAberto = false;
+        CarregarFuncionarios();
+    }
+
+    // EXCLUSÃO
+    private void AbrirModalExcluir(Funcionario funcionario)
+    {
+        _funcionarioExcluir = funcionario;
+        modalExcluirAberto = true;
+    }
+
+    private void FecharModalExcluir()
+    {
+        modalExcluirAberto = false;
+        _funcionarioExcluir = null;
+    }
+
+    private void ConfirmarExclusao()
+    {
+        if (_funcionarioExcluir != null)
+        {
+            FuncionarioDAO.Excluir(_funcionarioExcluir.Id);
+            modalExcluirAberto = false;
+            CarregarFuncionarios();
+        }
     }
 }
