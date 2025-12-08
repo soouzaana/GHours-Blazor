@@ -2,6 +2,9 @@
 @using AppExemplo.Models;
 @inject ClienteDAO ClienteDAO;
 @inject NavigationManager Navigation;
+@using AppExemplo.Components
+@using AppExemplo.Components.VV
+@using AppExemplo.Components.icons
 @rendermode InteractiveServer
 
 <PageTitle>Clientes Cadastrados</PageTitle>
@@ -106,7 +109,6 @@
     </div>
 }
 
-
 <table class="table">
     <thead>
         <tr>
@@ -127,13 +129,13 @@
                 <td>@cliente.Cpf</td>
                 <td>
                     <div class="flex">
-                        <a href="/cliente/@cliente.Id/atualizar" class="mr-3" title="Atualizar">
+                        <a href="javascript:void(0)" class="mr-3" title="Atualizar" @onclick="() => AbrirModalEdicao(cliente)">
                             <Icon>
                                 <AppExemplo.Components.icons.Edit />
                             </Icon>
                         </a>
 
-                        <a href="/cliente/@cliente.Id/excluir" title="Excluir">
+                        <a href="javascript:void(0)" title="Excluir" @onclick="() => AbrirModalExcluir(cliente)">
                             <Icon>
                                 <AppExemplo.Components.icons.Exclude />
                             </Icon>
@@ -146,17 +148,89 @@
     </tbody>
 </table>
 
+@if (modalEdicaoAberto)
+{
+    <div class="modal-backdrop fade show"></div>
+
+    <div class="modal fade show d-block">
+        <div class="modal-dialog">
+            <div class="modal-content p-4">
+
+                <h4 class="main-title">Atualizar Cliente</h4>
+
+                <div class="flex-column gap-3 mb-3">
+                    <TextField Label="Nome" @bind-Value="_clienteEdicao.Nome" />
+                </div>                
+                    
+                <div class="flex-column gap-3 mb-3">
+                    <TextField Label="Telefone" @bind-Value="_clienteEdicao.Telefone" />
+                </div>
+
+                <div class="flex-column gap-3 mb-3">
+                    <TextField Label="Email" @bind-Value="_clienteEdicao.Email" />
+                </div>
+
+                <div class="flex-column gap-3 mb-3">
+                    <TextField Label="CPF" @bind-Value="_clienteEdicao.Cpf" />
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-3">
+                    <button class="btn btn-secondary" @onclick="FecharModalEdicao">Cancelar</button>
+                    <button class="btn btn-save" @onclick="SalvarEdicao">Salvar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+@if (modalExcluirAberto)
+{
+    <div class="modal-backdrop fade show"></div>
+
+    <div class="modal fade show d-block">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content p-4 text-center">
+
+                <h5>Deseja realmente excluir?</h5>
+                <strong>@_clienteExcluir?.Nome</strong>
+
+                <div class="d-flex justify-content-center gap-3 mt-4">
+                    <button class="btn btn-secondary" @onclick="FecharModalExcluir">Cancelar</button>
+                    <button class="btn btn-danger" @onclick="ConfirmarExclusao">Excluir</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+
 @code {
     private List<Cliente> listaClientes = new();
-    private bool modalAberto = false;
 
-    private Cliente _novoCliente = new()
+    private bool modalAberto = false;
+    private bool modalEdicaoAberto = false;
+    private bool modalExcluirAberto = false;
+
+    // inicializações com todos os campos obrigatórios preenchidos para evitar CS9035
+    private Cliente _novoCliente = new Cliente
     {
-        Nome = "",
-        Telefone = "",
-        Email = "",
-        Cpf = ""
+        Nome = string.Empty,
+        Telefone = string.Empty,
+        Email = string.Empty,
+        Cpf = string.Empty
     };
+
+    private Cliente _clienteEdicao = new Cliente
+    {
+        Nome = string.Empty,
+        Telefone = string.Empty,
+        Email = string.Empty,
+        Cpf = string.Empty
+    };
+
+    private Cliente? _clienteExcluir;
 
     protected override void OnInitialized()
     {
@@ -168,7 +242,8 @@
         listaClientes = ClienteDAO.ListarTodos();
     }
 
-    private void AbrirModal()
+    // ===== CADASTRO =====
+    private async Task AbrirModal()
     {
         _novoCliente = new Cliente
         {
@@ -179,6 +254,7 @@
         };
 
         modalAberto = true;
+        await InvokeAsync(StateHasChanged);
     }
 
     private void FecharModal()
@@ -194,9 +270,75 @@
             modalAberto = false;
             CarregarClientes();
         }
-        catch
+        catch (Exception ex)
         {
-            // pode colocar tratamento depois
+            // trate/logue o erro conforme sua necessidade
+        }
+        Console.WriteLine("SALVOU: " + _novoCliente.Nome);
+    }
+
+    // ===== EDIÇÃO =====
+    private void AbrirModalEdicao(Cliente cliente)
+    {
+        // cria uma cópia com todos os campos preenchidos
+        _clienteEdicao = new Cliente
+        {
+            Id = cliente.Id,
+            Nome = cliente.Nome ?? string.Empty,
+            Telefone = cliente.Telefone ?? string.Empty,
+            Email = cliente.Email ?? string.Empty,
+            Cpf = cliente.Cpf ?? string.Empty
+        };
+
+        modalEdicaoAberto = true;
+    }
+
+    private void FecharModalEdicao()
+    {
+        modalEdicaoAberto = false;
+    }
+
+    private void SalvarEdicao()
+    {
+        try
+        {
+            ClienteDAO.Atualizar(_clienteEdicao);
+            modalEdicaoAberto = false;
+            CarregarClientes();
+        }
+        catch (Exception ex)
+        {
+            // trate/logue o erro conforme sua necessidade
+        }
+    }
+
+    // ===== EXCLUSÃO =====
+    private void AbrirModalExcluir(Cliente cliente)
+    {
+        _clienteExcluir = cliente;
+        modalExcluirAberto = true;
+    }
+
+    private void FecharModalExcluir()
+    {
+        modalExcluirAberto = false;
+        _clienteExcluir = null;
+    }
+
+    private void ConfirmarExclusao()
+    {
+        if (_clienteExcluir != null)
+        {
+            try
+            {
+                ClienteDAO.Excluir(_clienteExcluir.Id);
+                modalExcluirAberto = false;
+                CarregarClientes();
+            }
+            catch (Exception ex)
+            {
+                // trate/logue
+            }
         }
     }
 }
