@@ -1,6 +1,10 @@
 ﻿@page "/quadras"
-@using AppExemplo.Models;
-@inject QuadraDAO QuadraDAO;
+@using AppExemplo.Models
+@inject QuadraDAO QuadraDAO
+@using AppExemplo.Components
+@using AppExemplo.Components.VV
+@using AppExemplo.Components.icons
+@rendermode InteractiveServer
 
 <PageTitle>Quadras</PageTitle>
 
@@ -10,18 +14,80 @@
         font-weight: 600;
     }
 
-        .main-title::before {
-            content: "";
-            width: 8px;
-            height: 100%;
-            border: 2px solid #e39b34;
-            margin-right: 0.5rem;
-        }
+    .main-title::before {
+        content: "";
+        width: 8px;
+        height: 100%;
+        border: 2px solid #e39b34;
+        margin-right: 0.5rem;
+    }
+
+    .btn-nova-quadra {
+        position: fixed;
+        top: 110px;
+        left: 1150px;
+        width: 55px;
+        height: 55px;
+        border-radius: 25%;
+        background-color: #e39b34;
+        color: white;
+        border: none;
+        font-size: 32px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0,0,0,.3);
+        transition: 0.2s;
+    }
+
+    .btn-nova-quadra:hover {
+        transform: scale(1.1);
+    }
+
+    .btn-save {
+        background-color: #e39b34;
+        color: white;
+    }
 </style>
 
 <h1 class="main-title text-2xl font-semibold mt-3">Quadras</h1>
 
-<a href="/quadra-form" class="btn btn-sm btn-primary">Nova Quadra</a>
+<button class="btn-nova-quadra" @onclick="AbrirModal">+</button>
+
+@if (modalAberto)
+{
+    <div class="modal-backdrop fade show" style="position: fixed; inset: 0; z-index:1040;"></div>
+
+    <div class="modal fade show d-block" style="z-index:1050;">
+        <div class="modal-dialog">
+            <div class="modal-content p-4">
+
+                <h4 class="main-title text-xl font-semibold mb-3">Cadastrar Quadra</h4>
+
+                <div class="d-flex gap-3 mb-3">
+                    <TextField Label="Nome" Placeholder="Digite o nome..." @bind-Value="_novaQuadra.Nome" class="flex-1" />
+                </div>
+
+                <div class="d-flex gap-3 mb-3">
+                    <TextField Label="Descrição" Placeholder="Escreva a descrição..." @bind-Value="_novaQuadra.Descricao" class="flex-1" />
+                </div>
+
+                <div class="d-flex gap-3 mb-3">
+                    <TextField Label="Valor" Placeholder="Informe o valor..." @bind-Value="_novaQuadra.Valor" class="flex-1" />
+                </div>
+
+                <div class="d-flex gap-3 mb-3">
+                    <TextField Label="Status" Placeholder="Informe o status..." @bind-Value="_novaQuadra.Status" class="flex-1" />
+                </div>
+
+                <div class="d-flex justify-content-end gap-2">
+                    <button class="btn btn-secondary" @onclick="FecharModal">Cancelar</button>
+                    <button class="btn btn-save" @onclick="SalvarModal">Salvar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
 
 <table class="table">
     <thead>
@@ -30,6 +96,7 @@
             <th>Descrição</th>
             <th>Valor</th>
             <th>Status</th>
+            <th>Ações</th>
         </tr>
     </thead>
 
@@ -42,18 +109,100 @@
                 <td>@quadra.Valor</td>
                 <td>@quadra.Status</td>
                 <td>
-                    <a href="/quadra/@quadra.Id/atualizar" class="btn btn-sm btn-primary mr-2">
-                        <i class="fas fa-edit"></i> Atualizar
-                    </a>
-                    <a href="/quadra/@quadra.Id/excluir" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i>Excluir</a>
+                    <div class="flex">
+                        <a href="javascript:void(0)" class="mr-3" title="Atualizar" @onclick="() => AbrirModalEdicao(quadra)">
+                            <Icon><Edit /></Icon>
+                        </a>
+
+                        <a href="javascript:void(0)" title="Excluir" @onclick="() => AbrirModalExcluir(quadra)">
+                            <Icon><Exclude /></Icon>
+                        </a>
+                    </div>
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
+@if (modalEdicaoAberto)
+{
+    <div class="modal-backdrop fade show"></div>
+    <div class="modal fade show d-block">
+        <div class="modal-dialog">
+            <div class="modal-content p-4">
+
+                <h4 class="main-title">Atualizar Quadra</h4>
+
+                <div class="flex-column gap-3 mb-3">
+                    <div class="d-flex gap-3 mb-3">
+                        <TextField Label="Nome" @bind-Value="_quadraEdicao.Nome" />
+                    </div>
+                    <div class="d-flex gap-3 mb-3">
+                        <TextField Label="Descrição" @bind-Value="_quadraEdicao.Descricao" />
+                    </div>
+                    <div class="d-flex gap-3 mb-3">
+                        <TextField Label="Valor" Placeholder="Informe o valor..."
+                        @bind-Value="_quadraEdicaoValorTexto"
+                        class="flex-1" />
+                    </div>
+                    <div class="d-flex gap-3 mb-3">
+                        <TextField Label="Status" @bind-Value="_quadraEdicao.Status" />
+                    </div
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-3">
+                    <button class="btn btn-secondary" @onclick="FecharModalEdicao">Cancelar</button>
+                    <button class="btn btn-save" @onclick="SalvarEdicao">Salvar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+@if (modalExcluirAberto)
+{
+    <div class="modal-backdrop fade show"></div>
+    <div class="modal fade show d-block">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content p-4 text-center">
+                <h5>Deseja realmente excluir?</h5>
+                <strong>@_quadraExcluir?.Nome</strong>
+                <div class="d-flex justify-content-center gap-3 mt-4">
+                    <button class="btn btn-secondary" @onclick="FecharModalExcluir">Cancelar</button>
+                    <button class="btn btn-danger" @onclick="ConfirmarExclusao">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 @code {
+    private string _novaQuadraValorTexto = "0";
+    private string _quadraEdicaoValorTexto = "0";
     private List<Quadra> listaQuadras = new();
+
+    private bool modalAberto = false;
+    private bool modalEdicaoAberto = false;
+    private bool modalExcluirAberto = false;
+
+    private Quadra _novaQuadra = new Quadra
+    {
+        Nome = string.Empty,
+        Descricao = string.Empty,
+        Valor = 0,
+        Status = string.Empty
+    };
+
+    private Quadra _quadraEdicao = new Quadra
+    {
+        Nome = string.Empty,
+        Descricao = string.Empty,
+        Valor = 0,
+        Status = string.Empty
+    };
+
+    private Quadra? _quadraExcluir;
 
     protected override void OnInitialized()
     {
@@ -63,5 +212,85 @@
     private void CarregarQuadras()
     {
         listaQuadras = QuadraDAO.ListarTodos();
+    }
+
+    // CADASTRO
+    private void AbrirModal()
+    {
+        _novaQuadra = new Quadra
+        {
+            Nome = "",
+            Descricao = "",
+            Valor = 0,
+            Status = ""
+        };
+        _novaQuadraValorTexto = "0";
+        modalAberto = true;
+    }
+
+    private void FecharModal() => modalAberto = false;
+
+    private void SalvarModal()
+    {
+        if (decimal.TryParse(_novaQuadraValorTexto, out var valor))
+            _novaQuadra.Valor = valor;
+        else
+            _novaQuadra.Valor = 0;
+
+        QuadraDAO.Inserir(_novaQuadra);
+        modalAberto = false;
+        CarregarQuadras();
+    }
+
+    // EDIÇÃO
+    private void AbrirModalEdicao(Quadra quadra)
+    {
+        _quadraEdicao = new Quadra
+        {
+            Id = quadra.Id,
+            Nome = quadra.Nome ?? string.Empty,
+            Descricao = quadra.Descricao ?? string.Empty,
+            Valor = quadra.Valor,
+            Status = quadra.Status ?? string.Empty
+        };
+        _quadraEdicaoValorTexto = quadra.Valor.ToString("0.##");
+        modalEdicaoAberto = true;
+    }
+
+    private void FecharModalEdicao() => modalEdicaoAberto = false;
+
+    private void SalvarEdicao()
+    {
+        if (decimal.TryParse(_quadraEdicaoValorTexto, out var valor))
+            _quadraEdicao.Valor = valor;
+        else
+            _quadraEdicao.Valor = 0;
+
+        QuadraDAO.Atualizar(_quadraEdicao);
+        modalEdicaoAberto = false;
+        CarregarQuadras();
+    }
+
+    // EXCLUSÃO
+    private void AbrirModalExcluir(Quadra quadra)
+    {
+        _quadraExcluir = quadra;
+        modalExcluirAberto = true;
+    }
+
+    private void FecharModalExcluir()
+    {
+        modalExcluirAberto = false;
+        _quadraExcluir = null;
+    }
+
+    private void ConfirmarExclusao()
+    {
+        if (_quadraExcluir != null)
+        {
+            QuadraDAO.Excluir(_quadraExcluir.Id);
+            modalExcluirAberto = false;
+            CarregarQuadras();
+        }
     }
 }
