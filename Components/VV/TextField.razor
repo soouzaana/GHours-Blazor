@@ -1,71 +1,72 @@
-﻿@using Microsoft.AspNetCore.Components
+﻿    @using Microsoft.AspNetCore.Components
+    @typeparam T
 
-<style>
-    .input-base {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        position: relative;
-        width: 100%;
-        min-height: 3rem;
-        border: 2px solid #808080;
-        border-radius: 0.5rem;
-        padding: 0.5rem 0.75rem;
-        font-weight: 500;
-        background-color: white;
-        transition: border 0.2s;
-    }
+    <style>
+        .input-base {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            width: 100%;
+            min-height: 3rem;
+            border: 2px solid #808080;
+            border-radius: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            font-weight: 500;
+            background-color: white;
+            transition: border 0.2s;
+        }
 
-    .input-base:focus-within {
-        border-color: #e39b34;
-    }
+        .input-base:focus-within {
+            border-color: #e39b34;
+        }
 
-    .input-base label {
-        position: absolute;
-        bottom: 2.25rem;
-        left: 1.25rem;
-        background-color: white;
-        padding: 0 0.25rem;
-        font-size: 0.813rem;
-        font-weight: 600;
-        color: #808080;
-        pointer-events: none;
-    }
+        .input-base label {
+            position: absolute;
+            bottom: 2.25rem;
+            left: 1.25rem;
+            background-color: white;
+            padding: 0 0.25rem;
+            font-size: 0.813rem;
+            font-weight: 600;
+            color: #808080;
+            pointer-events: none;
+        }
 
-    .input-base:focus-within label {
-        color: #e39b34;
-    }
+        .input-base:focus-within label {
+            color: #e39b34;
+        }
 
-    .input-base input {
-        width: 100%;
-        height: 100%;
-        border: none;
-        outline: none;
-        background-color: transparent;
-        font-size: 1rem;
-        color: #808080;
-        padding: 0.25rem 0;
-    }
+        .input-base input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            background-color: transparent;
+            font-size: 1rem;
+            color: #808080;
+            padding: 0.25rem 0;
+        }
 
-    .input-base input::placeholder {
-        color: rgba(61, 61, 61, 0.6);
-        font-weight: 500;
-    }
+        .input-base input::placeholder {
+            color: rgba(61, 61, 61, 0.6);
+            font-weight: 500;
+        }
 
-    .input-base input:disabled {
-        cursor: not-allowed;
-        opacity: 0.6;
-    }
+        .input-base input:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
 
-    .slot-icon {
-        margin-left: 0.5rem;
-        width: 1rem;
-        height: 1rem;
-        color: #808080;
-    }
-</style>
+        .slot-icon {
+            margin-left: 0.5rem;
+            width: 1rem;
+            height: 1rem;
+            color: #808080;
+        }
+    </style>
 
-<div class="input-base">
+   <div class="input-base">
     @if (!string.IsNullOrEmpty(Label))
     {
         <label for="@Id">@Label</label>
@@ -75,7 +76,7 @@
            class="@Class"
            type="@Type"
            placeholder="@Placeholder"
-           value="@Value"
+           value="@BindAsString(Value)"
            @oninput="OnInput"
            disabled="@Disabled" />
 
@@ -95,14 +96,30 @@
     [Parameter] public bool Disabled { get; set; }
     [Parameter] public string? Class { get; set; }
 
-    [Parameter] public string? Value { get; set; }
-    [Parameter] public EventCallback<string?> ValueChanged { get; set; }
+    [Parameter] public T Value { get; set; } = default!;
+    [Parameter] public EventCallback<T> ValueChanged { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
+    private string BindAsString(T value)
+    {
+        return value?.ToString() ?? string.Empty;
+    }
+
     private async Task OnInput(ChangeEventArgs e)
     {
-        Value = e.Value?.ToString();
-        await ValueChanged.InvokeAsync(Value);
+        if (e.Value is string s)
+        {
+            try
+            {
+                var converted = (T)Convert.ChangeType(s, typeof(T));
+                Value = converted;
+                await ValueChanged.InvokeAsync(Value);
+            }
+            catch
+            {
+                // Ignora se a conversão falhar
+            }
+        }
     }
 }
