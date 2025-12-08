@@ -2,6 +2,7 @@
 @using AppExemplo.Models;
 @inject ClienteDAO ClienteDAO;
 @inject NavigationManager Navigation;
+@rendermode InteractiveServer
 
 <PageTitle>Clientes Cadastrados</PageTitle>
 
@@ -11,18 +12,100 @@
 		font-weight: 600;
 	}
 
-		.main-title::before {
+    .main-title::before {
 			content: "";
 			width: 8px;
 			height: 100%;
 			border: 2px solid #e39b34;
 			margin-right: 0.5rem;
-		}
+	}
+
+    .btn-novo-cliente {
+    position: fixed;
+    top: 120px;
+    left: 1150px;
+    width: 55px;
+    height: 55px;
+    border-radius: 25%;
+    background-color: #e39b34;
+    color: white;
+    border: none;
+    font-size: 32px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,.3);
+    transition: 0.2s;
+    }
+
+    .btn-novo-cliente:hover {
+        transform: scale(1.1);
+    }
+
+    .btn-save{
+        background-color: #e39b34;
+        color: white;
+    }
+
 </style>
 
 <h1 class="main-title text-2xl font-semibold mt-3">Clientes Cadastrados</h1>
 
-<a href="/cliente-form" class="btn btn-sm btn-primary">Novo Cliente</a>
+<button class="btn-novo-cliente" @onclick="AbrirModal">
+    +
+</button>
+
+@if (modalAberto)
+{
+    <div class="modal-backdrop fade show" style="position: fixed; inset: 0; z-index:1040;"></div>
+
+    <div class="modal fade show d-block" style="z-index:1050;">
+        <div class="modal-dialog">
+            <div class="modal-content p-4">
+
+                <h4 class="main-title text-xl font-semibold mb-3">Cadastrar Cliente</h4>
+
+                <div class="d-flex gap-3 mb-3">
+                    <AppExemplo.Components.VV.TextField 
+                        Label="Nome" 
+                        Placeholder="Digite o nome..." 
+                        @bind-Value="_novoCliente.Nome" 
+                        class="flex-1" />
+                </div>
+
+                <div class="d-flex gap-3 mb-3">
+                    <AppExemplo.Components.VV.TextField 
+                        Label="Telefone" 
+                        Placeholder="Digite o telefone..." 
+                        @bind-Value="_novoCliente.Telefone" 
+                        class="flex-1" />
+                </div>
+
+                <div class="d-flex gap-3 mb-3">
+                    <AppExemplo.Components.VV.TextField 
+                        Label="Email" 
+                        Placeholder="Digite o email..." 
+                        @bind-Value="_novoCliente.Email" 
+                        class="flex-1" />
+                </div>
+
+                <div class="d-flex gap-3 mb-3">
+                    <AppExemplo.Components.VV.TextField 
+                        Label="CPF" 
+                        Placeholder="Digite o CPF..." 
+                        @bind-Value="_novoCliente.Cpf" 
+                        class="flex-1" />
+                </div>
+
+                <div class="d-flex justify-content-end gap-2">
+                    <button class="btn btn-secondary" @onclick="FecharModal">Cancelar</button>
+                    <button class="btn btn-save" @onclick="SalvarModal">Salvar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
 
 <table class="table">
     <thead>
@@ -43,10 +126,20 @@
                 <td>@cliente.Email</td>
                 <td>@cliente.Cpf</td>
                 <td>
-                    <a href="/cliente/@cliente.Id/atualizar" class="btn btn-sm btn-primary mr-2">
-                        <i class="fas fa-edit"></i> Atualizar
-                    </a>
-                    <a href="/cliente/@cliente.Id/excluir" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i>Excluir</a>
+                    <div class="flex">
+                        <a href="/cliente/@cliente.Id/atualizar" class="mr-3" title="Atualizar">
+                            <Icon>
+                                <AppExemplo.Components.icons.Edit />
+                            </Icon>
+                        </a>
+
+                        <a href="/cliente/@cliente.Id/excluir" title="Excluir">
+                            <Icon>
+                                <AppExemplo.Components.icons.Exclude />
+                            </Icon>
+                        </a>
+                    </div>
+
                 </td>
             </tr>
         }
@@ -55,6 +148,15 @@
 
 @code {
     private List<Cliente> listaClientes = new();
+    private bool modalAberto = false;
+
+    private Cliente _novoCliente = new()
+    {
+        Nome = "",
+        Telefone = "",
+        Email = "",
+        Cpf = ""
+    };
 
     protected override void OnInitialized()
     {
@@ -64,5 +166,37 @@
     private void CarregarClientes()
     {
         listaClientes = ClienteDAO.ListarTodos();
+    }
+
+    private void AbrirModal()
+    {
+        _novoCliente = new Cliente
+        {
+            Nome = "",
+            Telefone = "",
+            Email = "",
+            Cpf = ""
+        };
+
+        modalAberto = true;
+    }
+
+    private void FecharModal()
+    {
+        modalAberto = false;
+    }
+
+    private void SalvarModal()
+    {
+        try
+        {
+            ClienteDAO.Inserir(_novoCliente);
+            modalAberto = false;
+            CarregarClientes();
+        }
+        catch
+        {
+            // pode colocar tratamento depois
+        }
     }
 }
