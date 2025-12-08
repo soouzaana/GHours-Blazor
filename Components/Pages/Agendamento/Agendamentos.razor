@@ -19,22 +19,46 @@
             border: 2px solid #e39b34;
             margin-right: 0.5rem;
         }
+
+        .btn-novo-cliente {
+        position: fixed;
+        top: 110px;
+        left: 1150px;
+        width: 55px;
+        height: 55px;
+        border-radius: 25%;
+        background-color: #e39b34;
+        color: white;
+        border: none;
+        font-size: 32px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0,0,0,.3);
+        transition: 0.2s;
+        text-align: center;
+    }
+
+    .btn-novo-cliente:hover {
+        transform: scale(1.1);
+    }
 </style>
 
 <h1 class="main-title text-2xl font-semibold mt-3">Agendamentos</h1>
 
-<a href="/agendamento-form" class="btn btn-sm btn-primary">Novo Agendamento</a>
+<a href="/agendamento-form" class="btn-novo-cliente">
+    +
+</a>
 
 <table class="table">
     <thead>
         <tr>
             <th>Data</th>
-            <th>HoraInicial</th>
-            <th>HoraFinal</th>
+            <th>Hora Inicial</th>
+            <th>Hora Final</th>
             <th>Status</th>
-            <th>ValorTotal</th>
-            <th>DataReserva</th>
-            @* <th>QuadraId</th> *@
+            <th>Data Reserva</th>
+            <th>Valor Total</th>
+            <th>Quadra Id</th> 
         </tr>
     </thead>
 
@@ -48,11 +72,21 @@
                 <td>@agendamento.Status</td>
                 <td>@agendamento.DataReserva</td>
                 <td>@agendamento.ValorTotal</td>
+                <td>@agendamento.QuadraId</td>
                 <td>
-                    <a href="/agendamento/@agendamento.Id/atualizar" class="btn btn-sm btn-primary mr-2">
-                        <i class="fas fa-edit"></i> Atualizar
-                    </a>
-                    <a href="/agendamento/@agendamento.Id/excluir" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i>Excluir</a>
+                    <div class="flex gap-2">
+                         <a href="javascript:void(0)" class="mr-3" title="Atualizar">
+                            <Icon>
+                                <AppExemplo.Components.icons.Edit />
+                            </Icon>
+                        </a>
+
+                        <a href="javascript:void(0)" title="Excluir">
+                            <Icon>
+                                <AppExemplo.Components.icons.Exclude />
+                            </Icon>
+                        </a>
+                    </div>
                 </td>
             </tr>
         }

@@ -6,20 +6,26 @@
 <!-- Main content -->
 <div class="flex flex-col flex-1">
     <!-- Navbar -->
-    <header class="bg-white shadow-md h-16 flex items-center justify-between px-6 transition-colors duration-500">     
-        <!-- User menu + tema -->
-        <div class="flex justify-content-between items-center gap-4 relative">
-            <button id="bell" class="text-gray-600 hover:text-indigo-600 transition">
-				<AppExemplo.Components.icons.Bell Color="orange" Width="15" Height="20"/>
-            </button>
-            <div class="relative">
-                <!-- Logo -->
-                <div class="flex items-center gap-2">
-                    <img src="/images/logo.svg" alt="Logo" class="h-12 w-12">
-                </div>
+    <header class="bg-white shadow-md h-16 flex items-center px-6 transition-colors duration-500">
+    <!-- Logo + notificações no canto esquerdo -->
+        <div class="flex items-center gap-4">
+            <!-- Logo -->
+            <div class="flex items-center gap-2">
+                <img src="/images/logo.svg" alt="Logo" class="h-12 w-12">
             </div>
+
+            <!-- Notificações -->
+            <button id="bell" class="text-gray-600 hover:text-indigo-600 transition">
+                <AppExemplo.Components.icons.Bell Color="orange" Width="15" Height="20"/>
+            </button>
+        </div>
+
+        <!-- Aqui você pode colocar outros elementos do header à direita -->
+        <div class="ml-auto flex items-center gap-4">
+            <!-- Outros elementos como menu do usuário, tema etc. -->
         </div>
     </header>
+
 
 
 
